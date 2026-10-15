@@ -1,0 +1,12 @@
+{
+  "pages": 40,
+  "unresolved_reference_markers": false,
+  "replacement_characters": false,
+  "public_links": [
+    "https://github.com/TommyMaHaoKun/subtraction-games-a4ac/releases/tag/v1.1.1",
+    "https://github.com/TommyMaHaoKun/subtraction-games-a4ac",
+    "https://github.com/TommyMaHaoKun/subtraction-games-a4ac",
+    "https://github.com/TommyMaHaoKun/subtraction-games-a4ac/releases/tag/v1.1.1"
+  ],
+  "compilation": "three pdfLaTeX passes; no warnings or overfull/underfull boxes"
+}

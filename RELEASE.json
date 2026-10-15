@@ -1,0 +1,27 @@
+{
+  "title": "Electronic supplement to A Complete Word Classification for Subtraction Games with Moves a,4a,c",
+  "version": "1.1.1",
+  "date": "2026-10-15",
+  "archive": "subtraction_games_supplement_v1.1.1.zip",
+  "public_deposit_status": "public_release",
+  "public_url": "https://github.com/TommyMaHaoKun/subtraction-games-a4ac/releases/tag/v1.1.1",
+  "doi": null,
+  "defining_inputs": [
+    "subtraction_games_complete.tex",
+    "certificates/atlas.json",
+    "certificates/seams.json"
+  ],
+  "entry_points": {
+    "checks": "code/verify_all.py",
+    "evaluate": "code/classify.py",
+    "integrity": "code/verify_hashes.py"
+  },
+  "requirements": {
+    "python": "3.9 or later",
+    "packages": "standard library only",
+    "assertions": "enabled; do not use -O",
+    "network": "not required"
+  },
+  "formalization": "No Lean or other proof-assistant formalization is claimed.",
+  "repository_url": "https://github.com/TommyMaHaoKun/subtraction-games-a4ac"
+}

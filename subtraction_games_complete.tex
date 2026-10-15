@@ -1,0 +1,2215 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,booktabs,longtable,array,xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,columns=fullflexible,keepspaces=true,showstringspaces=false}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\mex}{mex}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\per}{^{\infty}}
+\newcommand{\half}[2]{[#1,#2)}
+\setlength{\emergencystretch}{2em}
+
+\title{A Complete Word Classification for\texorpdfstring{\\}{ }Subtraction Games with Moves $a,4a,c$}
+\author{}
+\date{15 October 2026 --- revised release 1.1.1}
+\begin{document}
+\maketitle
+\begin{abstract}
+We classify the entire Sprague--Grundy sequence of the normal-play subtraction game with moves $a,4a,c$, where $a\ge2$, $c>4a$, and $\gcd(a,c)=1$. The classification is an explicit terminating word construction, with exact least eventual period $p$ and earliest preperiod $q$ for every admissible pair. In particular, $q>0$ and $p\in\{5,5a,c+a,c+4a\}$. Five residue constructions and a finite atlas treat the outer parameter ranges. For $c=5a\pm d$ with arbitrarily large quotient $\lfloor a/d\rfloor$, three closed half-strip column formulas are joined to balanced necklaces built from the tokens $012$ and $01012$. Six boundary identities on each side prove this construction uniformly, using a period-forty affine reduction. Separate arguments prove primitive periods, exact last mismatches, and the two infinite integer-ratio seam families $c=5a\pm1$. All finite proof obligations have executable exact checkers; independent recurrence comparisons supplement them. No bound on the parameters, unproved period hypothesis, or state-search fallback occurs in the classification. The defining electronic tables and exact checkers accompany the versioned public release 1.1.1. The contribution is compared with the hypotheses of the cited classifications. This is a computer-assisted proof, not a proof-assistant formalization.
+\end{abstract}
+\clearpage
+{\small\tableofcontents}
+\clearpage
+
+
+
+\section{The problem and the scope of the classification}
+A move in a subtraction game replaces a heap of $n$ counters by $n-s$, where $s$ is a permitted move and $s\le n$. The player unable to move loses. We study
+\[
+\mathcal S=\{a,4a,c\},\qquad a\ge2,\quad c>4a,\quad \gcd(a,c)=1.
+\]
+Its Sprague--Grundy sequence is determined by
+\begin{equation}\label{eq:sg}
+G(n)=\mex\{G(n-s):s\in\mathcal S,\ s\le n\},\qquad \mex\varnothing=0.
+\end{equation}
+It takes values in $\{0,1,2,3\}$. Let $p$ be its least positive eventual period and let $q$ be the least index from which that period holds. Thus $G(n+p)=G(n)$ for all $n\ge q$, and $q=0$ means pure periodicity. Eventual periodicity follows from the finite state argument below; the research problem is to determine the words and the exact values of $p,q$ arithmetically.
+
+\begin{theorem}[Complete classification]\label{thm:main}
+For every pair in the stated domain, the constructions in this paper and its electronic word tables determine all $G(n)$, the least eventual period $p$, and the earliest preperiod $q$. They terminate using finite word powers, arithmetic, and a finite case selection, without iterating the game recurrence until a repeated state. Universally,
+\begin{equation}\label{eq:conjset}
+q>0,\qquad p\in\{5,5a,c+a,c+4a\}.
+\end{equation}
+In particular, for $c=5a\pm d$, $0<41d<a$, the least period is $p=c+a$. The full words and exact preperiods in this region are given in Sections~\ref{sec:upper-uniform} and~\ref{sec:lower-uniform}, including the integer-ratio seams $d=1$.
+\end{theorem}
+
+The following disjoint case selection specifies the entire classification. The numeric boundary $41$ is a convenient junction between two proved constructions; there is no restriction on the quotient in the final two cases.
+\begin{center}\small
+\begin{tabular}{p{.43\textwidth}p{.47\textwidth}}\toprule
+Parameter case, in this order & Structural description\\\midrule
+$a=2$, all admissible $c$ & The five formulas of Theorem~\ref{thm:a2}.\\
+$a\ge3$, $c>6a$ & Five residue constructions in Section~\ref{sec:large}.\\
+$a\ge3$, $4a<c<6a$, $41|c-5a|\ge a$ & The finite affine atlas and its rational seams.\\
+$a\ge3$, $c=5a\pm d$, $0<41d<a$, $d>1$ & Uniform column and necklace constructions, with $a=kd+b$, $0<b<d$, and every $k\ge41$.\\
+$a\ge42$, $c=5a\pm1$ & Uniform integer-seam constructions and quadratic preperiod formulas.\\\bottomrule
+\end{tabular}
+\end{center}
+The last row is used only after the preceding cases. Coprimality excludes $c=5a,6a$ and implies $\gcd(a,d)=1$. Hence an integer ratio $a/d$ forces $d=1$; every other near-diagonal pair has $0<b<d$. The coverage argument in Section~\ref{sec:coverage} proves that the selection has no omitted endpoint or parameter.
+
+Recurrence validity, least-period minimality, and earliest-preperiod minimality are separate obligations throughout. The period restriction in \eqref{eq:conjset} is a conclusion of the word constructions and their primitivity proofs, never a premise used to discover a cycle.
+
+\subsection{Electronic supplement and how to use the classification}\label{sec:supplement}
+The electronic supplement \cite{Supplement}, version 1.1.1 (15 October
+2026), is an integral part of this paper. Its archive is named
+\path{subtraction_games_supplement_v1.1.1.zip}. This manuscript and that
+archive must be distributed together: a PDF alone does not supply the
+89 affine word records and 89 seam words needed in Section~\ref{sec:atlas}.
+The paper, source, word tables and verification programs are distributed
+together at the \href{https://github.com/TommyMaHaoKun/subtraction-games-a4ac/releases/tag/v1.1.1}{version 1.1.1 release page}.
+The repository is \url{https://github.com/TommyMaHaoKun/subtraction-games-a4ac}.
+The release page provides the companion archive and its SHA-256 checksum;
+no DOI is assigned.
+
+After extraction, the top-level version directory contains
+\path{README.md}, \path{REPRODUCIBILITY.md}, \path{SCHEMA.md},
+\path{PROOF_MAP.md}, \path{RELEASE.json}, and \path{SHA256SUMS.txt}.
+The directory \path{certificates/} contains the defining tables
+\path{atlas.json} and \path{seams.json}, together with generated verification
+reports. Programs are in \path{code/}; central-strip programs are in
+\path{code/near/}. The standalone paper source and PDF are at the top level.
+All file names below refer to this archive, never to a path on an author's
+computer. Bare program names designate \path{code/}, or \path{code/near/}
+for the central-strip programs. The release manifest identifies the version;
+\path{python code/verify_hashes.py} checks the file digests before execution.
+The archive digest is supplied separately with the release. Digests establish
+file correspondence, not the truth of the mathematics or the identity of a
+publisher.
+
+The defining data are the two word tables. The exact proof checkers discharge
+the finite obligations specified in Appendix~\ref{app:proof-map}; the printed
+reduction lemmas explain why those obligations imply unbounded statements.
+Independent integer recurrence comparisons are additional corroboration.
+Development notes are not mathematical dependencies; a short provenance and
+AI-assistance statement is in \path{PROVENANCE.md}.
+
+For a given admissible $(a,c)$, use the case table above in order:
+\begin{enumerate}
+\item For $a=2$, or for $a\ge3,c>6a$, use the printed words and $p,q$
+in Theorem~\ref{thm:a2} or Section~\ref{sec:large}. If a displayed prefix
+continues beyond $q$, take its first $q$ letters and rotate the repeating
+word to begin at position $q$.
+\item In the outer atlas region write $c=Ba+r$, $B\in\{4,5\}$,
+$0<r<a$, $t=r/a$. If $t$ is a listed seam, use the unique record with
+identifier $(B,t)$ in \path{certificates/seams.json}; otherwise use the
+unique record $(B,\mathrm{lo},\mathrm{hi})$ with
+$\mathrm{lo}<t<\mathrm{hi}$ in \path{certificates/atlas.json}.
+Section~\ref{sec:record-example} explains all mathematical fields.
+\item In the remaining region set $d=|c-5a|$. If $d>1$, divide
+$a=kd+b$, then $k=3m+s$, and use the printed upper or lower symbol
+formula in Sections~\ref{sec:upper-uniform} and~\ref{sec:lower-uniform}.
+If $d=1$, use the separate integer-seam formula there. Each gives exact
+$p,q$ and every symbol, without a table lookup or cycle search.
+\end{enumerate}
+In the last case the prefix and block, if desired as finite strings, are
+$H=G(0)\cdots G(q-1)$ and $W=G(q)\cdots G(q+p-1)$.
+The command \path{python code/classify.py a c} implements precisely this
+route and returns these strings and the integers $p,q$. Thus the outer
+atlas words are electronic definitions; the other families have their
+complete definitions printed here. Arithmetic summaries of atlas periods
+do not replace its full word records.
+
+\subsection{Relation to earlier results and the contribution}\label{sec:literature}
+Finite-state eventual periodicity and the two-move initial sequence are
+standard facts, reproved here in the form needed for word certificates.
+Ho's finite-window criterion \cite[Lemma 1]{Ho} is related to
+Lemma~\ref{lem:certificate}; our formulation verifies a proposed word and
+separates recurrence, primitivity and the last mismatch. The cyclic block
+identity and parameter-reduction lemmas are proved explicitly rather than
+assumed from computation.
+
+Manabe's inspected version \cite{Manabe} gives sufficient pure-periodicity
+tests. For $b=4a$, Lemma 14 gives
+$\Theta_{a+b}=\{a,4a\}$, Theorem 27 gives
+$\Theta_{c+a}=\{2a,4a\}$, and Proposition 61 confines
+$\Theta_{c+b}$ to multiples of $a$. None permits a primitive pair here.
+Failure of sufficient tests alone proves no exclusion: necessity is
+Conjecture 52. Proposition 55 proves necessity only for
+$c\ge2(a+b)$ and pure least period at most $a+b$; our
+Corollary~\ref{cor:short} reproves that exclusion for $b=4a$.
+The full positive-preperiod conclusion here establishes the prediction
+of Conjecture 52 on this special slice, including the range and periods
+outside Proposition 55. It does not prove that conjecture in general.
+
+Zhang's Theorem 1.4 \cite{Zhang} proves eventual piecewise linearity for
+fixed sets containing $1$ and only odd moves, for $\{1,b\}$,
+for $\{a,2a\}$, and for intervals of consecutive moves.
+None is $\{a,4a\}$ with $a\ge2$. Proposition 3.1 treats
+$\{a,2a,c\}$; division by a common factor cannot change the ratio
+$4$ to $2$. Our large-$c$ formulas give piecewise affine $p,q$ for
+each fixed $a$ along the primitive admissible residue classes, a restricted
+instance of the prediction in Zhang's Conjecture 1.3, without assuming it.
+
+Ho's Tables 1--3 concern sets with smallest move $1$; Table 4 is additive.
+For the superficially closest family $\{a,b,a+b+1\}$, Table 5 requires
+$b=2a+r$, $r\le\min(2,a-1)$, excluding $b=4a$.
+Table 6 treats $\{a,b,b+2ja\}$ with nonzero remainder of $b$ modulo $a$;
+substituting $b=4a$ instead gives a nonprimitive triple.
+Theorem 5's ultimately bipartite family $\{a,2a+1,3a\}$ also has
+different hypotheses. These results do not supply the present family of
+full words. This comparison concerns the stated families, not an assertion
+that every consequence of every expansion set has been classified.
+
+Ward's Conjecture 1, Case II \cite{Ward}, predicts that the least period
+is the gcd of the pair sums divisible by it, among seven possibilities.
+Our four-value restriction is established by explicit words for this
+particular family. Ward's conjecture is not used, and the classification
+does not extend to arbitrary three-move sets. The additive case $c=5a$
+is excluded by coprimality. Mikl\'os and Post \cite{MP} concern the binary
+winning/losing sequence; its period must not be identified automatically
+with that of the full nim-sequence. We use losing positions only in a
+necessary obstruction, proved below.
+
+The contribution presented here is a complete, executable word
+classification of this primitive even-harmonic slice, with exact transients
+and least periods: finite affine cones and exceptional seams are joined to
+two unbounded half-strip and balanced-necklace constructions. The mechanisms
+are explicit column formulas, an invertible modular orbit, six boundary
+identities on each side, a period-forty reduction, and separate suffix
+arguments locating the last mismatch. The cited classifications do not
+provide that combination or cover the unbounded region in these hypotheses.
+This identifies what is proved here; priority for every individual outer
+formula, exceptional seam and construction is not settled by this audit.
+The exact remaining bibliographic comparisons are recorded in the
+response to review. Earlier project material is credited in the supplement;
+no inaccessible working manuscript is a premise of a proof.
+
+
+\section{Words, initial values, and certification}
+A symbol power such as $0^a$ means $a$ consecutive zeroes; a word power means concatenation. A half-open interval denotes its integer positions. Put
+\begin{equation}\label{eq:B}
+ B=0^a1^a0^a1^a2^a,\qquad L_0=5a.
+\end{equation}
+The two-move game $\{a,4a\}$ has nim-sequence $B\per$. Indeed it is constant on each block $\half{ja}{(j+1)a}$, and the induced sequence for moves $1,4$ is $(01012)\per$, as direct substitution verifies, including the first four terms. Consequently $G(n)=B(n)$ for $n<c$, where $B(n)$ denotes the periodic extension.
+
+For a periodic word of length $P$, its \emph{circular} runs include the join between its end and beginning. An eventual period of $AW\per$ is a period of the bi-infinite extension of $W$: shift any desired comparison far enough to the right by a multiple of $|W|$. Its least period therefore divides $|W|$. In particular, a unique circular run of a specified symbol and length forces primitivity, as does a unique ordered signature of consecutive runs.
+
+\begin{lemma}[Finite word certificate]\label{lem:certificate}
+Let $H=AW\per$, $Q=|A|$, $P=|W|$, and $c=\max\mathcal S$. If $H$ satisfies \eqref{eq:sg} for $0\le n<Q+c+P$, then it satisfies it for every $n\ge0$. If $W$ is primitive and either $Q=0$ or $H(Q-1)\ne H(Q-1+P)$, then its least eventual period and preperiod are $P,Q$.
+\end{lemma}
+\begin{proof}
+For $n\ge Q+c$, all arguments in the recurrence lie in the periodic suffix, and the entire recurrence assertion is $P$-periodic in $n$. One full period of that assertion has been checked. Uniqueness of the recursive definition gives $H=G$. The observation about the bi-infinite extension proves least period. A smaller preperiod for that period would require the failed equality at $Q-1$.
+\end{proof}
+
+\begin{lemma}[Complete recurrence states]\label{lem:states}
+Generate $G$ using the initial boundary in \eqref{eq:sg}. Consider the states
+\[R_i=(G(i),G(i+1),\ldots,G(i+c-1)),\qquad i\ge0.\]
+If the first repeated state is $R_j=R_i$, $i<j$, then $q=i$ and $p=j-i$.
+\end{lemma}
+\begin{proof}
+The next symbol after every such state has all three moves available; it is a deterministic function of the state. Thus equality propagates forever. For a deterministic sequence of states, the first repeat identifies its initial path and its cycle, with least lengths $i$ and $j-i$. A scalar sequence periodic from $q'$ with period $p'$ has state sequence periodic from the same $q'$ with the same $p'$, and conversely. A smaller scalar preperiod or least period would therefore contradict the first-repeat description of the state sequence.
+\end{proof}
+The state space has at most $4^c$ elements. This proves eventual periodicity, but that general bound is not a structural formula and is not presented as one.
+
+\subsection{A cyclic block identity}
+\begin{lemma}\label{lem:blocks}
+Let $(t_i)_{i\in\Z}$ satisfy $0\le t_i\le a$ and $t_i+t_{i-1}\ge a$. Concatenate the blocks $0^a1^a2^{t_i}$ in both directions to form $H$. Then, for every integer $n$,
+\begin{equation}\label{eq:blocks}
+ H(n)=\mex\{H(n-a),H(n-4a),H(n+a)\}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Translate a current block to start at zero, and let its $2$-run length be $w$, with the preceding lengths $u,v$. The preceding two block starts are $-2a-u$ and $-4a-u-v$.
+
+If $0\le n<a$, its $\pm a$ neighbours are nonzero. The point $n-4a\in\half{-4a}{-3a}$ lies after the end $-3a-u-v\le-4a$ of the earlier zero run and before the start $-2a-u\ge-3a$ of the preceding zero run. It is nonzero, giving mex zero.
+
+If $a\le n<2a$, the $-a$ neighbour is zero and the $+a$ neighbour is either zero or two. The point $n-4a\in\half{-3a}{-2a}$ lies after the end $-2a-u-v\le-3a$ of the earlier $1$-run and before the start $-a-u\ge-2a$ of the preceding $1$-run. It is not one, giving mex one.
+
+If $2a\le n<2a+w$, the $-a,+a$ neighbours are one and zero. Moreover $n-4a\in\half{-2a}{-2a+w}$ lies after the earlier $2$-run ends at $-2a-u$ and before the preceding $2$-run begins at $-u$, because $u+w\le2a$. It is zero or one, giving mex two. Empty $2$-runs and the endpoint lengths $0,a$ cause no change in these half-open inequalities.
+\end{proof}
+
+\subsection{Uniform repetition parameters}\label{sec:affine}
+Several word formulas contain an unbounded repetition parameter. Their recurrence proofs use the following uniform reduction; the affine atlas uses the fixed-parameter version proved afterwards.
+
+Normalize lengths by $a$, put $t=r/a$, and interpret a word as a right-continuous step function on real half-open intervals. A proof of its real recurrence with moves $1,4,5k+j+t$ implies the integer recurrence by evaluating at $x=n/a$.
+
+\begin{lemma}[Uniform affine-boundary reduction]\label{lem:affine}
+Let $k$ range over all integers $k\ge k_0$. Suppose a candidate $H W\per$ has a finite prefix $F_k(t)$ containing all positions below $|H|+c+|W|$. Express $F_k(t)$ in segments, each either a homogeneous run or a repetition of a pattern independent of $k$ and of length five. All run lengths must be nonnegative on the parameter domain. Suppose every segment endpoint has form $5mk+b+gt$, with integer coefficients, and, for each fixed $k$, every expanded homogeneous-run endpoint is affine in $t$ with rational coefficients. Include the endpoints shifted by $0,1,4,c=5k+j+t$, and suppose all their constant parts $b+gt$ lie in $[L,U]$ throughout the parameter interval. If an integer $K\ge k_0$ satisfies
+\[5K-(U-L)\ge5,\]
+verification for the admissible integers $k\le K$ suffices for every $k$. For each such fixed $k$, it suffices to check one rational $t$ in every open cell of the arrangement of all shifted homogeneous-run endpoints, and every included intersection value.
+\end{lemma}
+\begin{proof}
+Fix $t$. For $k\ge K$, endpoints of different $k$-coefficients have fixed order and distance at least five. Endpoints of equal coefficient have fixed distance and order. Include $0$ and the end of $F_k(t)$ among the endpoints. The ordered partition therefore has the same interval types for all $k\ge K$. In an interval, the target and each available predecessor belong to fixed segments; a negative predecessor remains unavailable. The tuple of values is five-periodic in the running coordinate, and changing $k$ shifts each segment phase and each move by a multiple of five.
+
+An interval between equal-coefficient endpoints is translated by a multiple of five without changing its length. Between different-coefficient endpoints, the interval at $k=K$ already contains every phase modulo five. Thus every tuple occurring for a larger $k$ occurs for $K$ at the same $t$.
+
+For fixed $k$, expand into homogeneous runs. All endpoints and shifted endpoints are affine functions of $t$. Their order changes only at their finitely many rational pairwise intersections. Inside a parameter cell the same coordinate intervals exist, with the same target and predecessor symbols. Test one rational parameter there; test any included intersection parameter separately. Right-continuity makes each coordinate interval's tuple valid at its left endpoint as well. The move-availability boundaries are included by shifting the initial endpoint zero. Finally Lemma~\ref{lem:certificate}, with the displayed rather than necessarily least period, extends the verified finite prefix to the entire sequence.
+\end{proof}
+
+Appendix~\ref{app:uniform} specifies the accompanying standalone certificate, including its templates and exact-rational endpoint calculations. The proof uses only Python's standard-library integer and fraction operations. Every fixed compound word is split into homogeneous runs for the macrosegment argument; only patterns whose length is identically five are treated as nonconstant macrosegments.
+
+Table~\ref{tab:uniform} records the executed reductions. A tag's first digit is $j$ in $c=(5k+j)a+r$; $t=r/a$. For each long-period branch use $F=HWW$; for a short-period branch use $F=HW^{k+2}$ with displayed $|W|=5a$. Each contains $|H|+c+|W|$ letters. The midpoint of family 2 is supplied separately by Theorem~\ref{thm:a2}.
+
+\begin{table}[ht]\centering\small
+\begin{tabular}{c|c|c|c|c|r}\toprule
+Tag & $t$ domain & $k$ checked & $[L,U]$ & Exact $t$ checked & Cells\\\midrule
+$0l$&$(0,1/2]$&$2,\ldots,4$&$[0,15]$&$1/4,1/2$&588\\
+$0m$&$(1/2,2/3)$&$2,\ldots,4$&$[0,13]$&$7/12$&486\\
+$0h$&$[2/3,1)$&$2,\ldots,5$&$[0,19]$&$2/3,5/6$&1212\\
+$2ll$&$(0,1/3)$&$1,\ldots,5$&$[0,20]$&$1/6$&1010\\
+$2ls$&$[1/3,1/2)$&$1,\ldots,6$&$[0,22]$&$1/3,5/12$&2232\\
+$2us$&$(1/2,2/3]$&$1,\ldots,8$&$[0,34]$&$7/12,2/3$&4168\\
+$2ul$&$(2/3,1)$&$1,\ldots,9$&$[0,38]$&$5/6$&3339\\
+$3l$&$(0,1/2)$&$1,\ldots,7$&$[0,26]$&$1/4$&1029\\
+$3h$&$[1/2,1)$&$1,\ldots,5$&$[0,20]$&$1/2,3/4$&765\\\bottomrule
+\end{tabular}
+\caption{Exact uniform certificates: 14,829 coordinate cells in total. The checker exhausts pairwise intersections and finds no additional interior parameter cuts.}\label{tab:uniform}
+\end{table}
+For example, the nine tags' upper bounds give respectively $K=4,4,5,5,6,8,9,7,5$. The intercept bounds in the table hold even on the larger closed interval $0\le t\le1$. All lengths used by a template are nonnegative on its actual domain; zero-length runs at included boundaries are removed, and continuity of the remaining partition is checked. Every tested tuple has its proposed symbol as mex. Together with Lemma~\ref{lem:affine}, these finite certificates constitute recurrence proofs valid for every parameter in the following theorems.
+
+
+\subsection{Finite atlases of affine run words}\label{sec:atlas-method}
+For a rational open interval $I=(u,v)\subset(0,1)$, an affine word is a finite list
+\[
+[(\sigma_1,(b_1,g_1)),\ldots,(\sigma_m,(b_m,g_m))].
+\]
+At an integer pair $(a,r)$ with $t=r/a\in I$, it means the concatenation $\sigma_1^{b_1a+g_1r}\cdots\sigma_m^{b_ma+g_mr}$. All coefficients in our atlas are integers and all lengths are positive in the open interval. A row records two such words $H,W$ and their affine lengths $Q,P$. Thus the atlas defines a full sequence without generating any mex values or searching for a repeated state.
+
+\begin{lemma}[An exact affine-cone certificate]\label{lem:atlas}
+Fix $d\in\{4,5\}$ and the normalized moves $1,4,d+t$. Suppose $H(t),W(t)$ have positive affine run lengths on $I$, and a finite concatenation $F=HW^e$ has length at least $|H|+(d+t)+|W|$ throughout $I$. Form the affine endpoints of all homogeneous runs in $F$, shifted by $0,1,4,d+t$. Sort the distinct affine functions at one interior rational parameter. If every adjacent order inequality holds at both endpoints of $I$, this ordering holds throughout $I$. Checking mex once on each resulting coordinate interval at that parameter proves the integer recurrence for every $r/a\in I$.
+\end{lemma}
+\begin{proof}
+Every adjacent difference is affine, so nonnegativity at both interval endpoints implies nonnegativity throughout. Distinct affine functions cannot meet in the interior without crossing. Hence the homogeneous run containing each argument, and the availability of each move, remain constant on each corresponding coordinate cell. The tuple of target and option symbols checked at the selected parameter is therefore the tuple throughout the parameter interval. At coordinate boundaries, right-continuity supplies the value from the cell on the right. Evaluating at $x=n/a$ proves the discrete recurrence. Lemma~\ref{lem:certificate} extends the finite check to all $n$.
+\end{proof}
+If the adjacent order test fails, all pairwise rational intersections give a finite refinement, and the same proof applies on each cell with intersection parameters checked separately. In the delivered atlas the stated intervals pass the adjacent-order test.
+
+\begin{lemma}[Uniform minimality and rational seams]\label{lem:atlas-min}
+Assume $W$ is nonconstant. Merge adjoining equal symbols in its circular word. For each nonzero circular shift of its maximal runs, compare all corresponding symbols and affine lengths. If no shift preserves them identically and none preserves them at an interior parameter, then $W$ is primitive throughout $I$. If $|H|>0$ and the last symbols of $H,W$ differ, the least preperiod is $|H|$. A rational endpoint $t=h/d$ in lowest terms corresponds to exactly one primitive integer pair $(a,r)=(d,h)$.
+\end{lemma}
+\begin{proof}
+Any period smaller than $|W|$ must take run boundaries to run boundaries and hence induce a nonzero circular shift of maximal runs. Conversely such a symmetry is detected by equal symbols and lengths. A nonidentical affine equality has at most one root; checking all those rational possibilities exhausts any exceptional parameter. This also applies to an integer period after specialization, since extending each integer letter over a unit half-open interval preserves its periods. The preceding-symbol mismatch proves the least preperiod by Lemma~\ref{lem:certificate}. Finally $r/a=h/d$ and $\gcd(a,r)=1$ force $(a,r)=(d,h)$.
+\end{proof}
+The last statement is why finitely many exact game certificates fill every seam in a finite atlas. Formula limits are not used at seams: runs can vanish, the least period can decrease, and the earliest preperiod can change.
+
+
+\subsection{Periodic macrosegments and an unbounded integer parameter}
+The near-diagonal constructions use fixed words of lengths five and eight.
+The following reduction differs from an extension of a finite atlas: it
+proves one symbolic identity for every value of its repetition parameter.
+
+\begin{lemma}[Periodic macrosegment reduction]\label{lem:macro40}
+Consider finitely many word identities with an integer parameter $m\ge m_0$,
+on a verification interval whose endpoints are affine integer functions of
+$m$. Express every operand as a concatenation of fixed periodic segments,
+with affine endpoints. Split fixed literals into individual letters.
+Include all segment endpoints translated by the argument shifts, all
+availability thresholds, and the verification endpoints. Suppose every
+segment period divides $L$, and increasing $m$ by $M$ translates every
+endpoint and every segment phase by a multiple of $L$.
+
+Let $K\ge m_0$ be such that, for $m\ge K$, all endpoint orders are fixed
+and endpoints of distinct slopes are separated by at least $L$. Then
+checking $m_0\le m<K+M$ suffices for every $m\ge m_0$. Within one coordinate
+cell, at most its first $L$ integer positions need be checked.
+
+In particular, if every endpoint is $\lambda m+\nu$ with even $\lambda$,
+every segment period divides $40$, the constants lie in $[u,v]$, and the
+minimum positive slope difference is $g$, then one may use $L=40$, $M=20$,
+and any $K$ satisfying $gK-(v-u)\ge40$.
+\end{lemma}
+\begin{proof}
+Partition the coordinate interval by the shifted endpoints. On each cell
+every operand remains in a fixed segment and its availability is constant.
+Endpoints of equal slope retain their separation; endpoints of different
+slopes have fixed order after $K$. Choose the representative
+$K\le m'<K+M$ congruent to a given $m\ge K$ modulo $M$.
+A cell bounded by endpoints of equal slope translates without changing
+length. Its operand phases are preserved by the hypothesis on $M$.
+A cell bounded by endpoints of different slopes contains at least $L$
+consecutive positions already at $m'$. Every tuple there repeats with
+coordinate period $L$, and the same phase preservation holds. Its added
+positions at larger $m$ therefore produce no new tuple. A fixed one-letter
+segment cannot contain such a growing cell. All remaining parameters
+are among the explicitly checked smaller integers. Half-open cells include
+every integer boundary on its right-hand side. The last assertion follows
+from the intercept bound and $20\lambda\equiv0\pmod {40}$.
+\end{proof}
+
+For an infinite final periodic segment it is enough to include one complete
+joint period after all delayed operands enter their final segments. For a
+last-mismatch assertion, include the proposed affine last index and its
+successor among the partition endpoints. The same reduction then proves
+both existence of that mismatch and absence of every later one.
+
+\subsection{Token necklaces and modular orbits}
+For the near-diagonal sections define the fixed digit words
+\[
+\alpha=012,\qquad \beta=01012,\qquad
+\rho=\alpha\beta=01201012,\qquad \omega=01012323.
+\]
+They are distinct from the length-$5a$ word $B$ in \eqref{eq:B}.
+\begin{lemma}[Token identity]\label{lem:tokens}
+Every bi-infinite concatenation of $\alpha$ and $\beta$ satisfies
+\[
+ f(z)=\mex\{f(z-1),f(z-4),f(z+1)\}.
+\]
+Consequently, if $P=c+a$, $\gcd(a,P)=1$, and $T$ is any cyclic
+concatenation of these tokens of length $P$, then
+$T[(a^{-1}n+\gamma)\bmod P]$ is a cyclic solution of the game recurrence,
+for every phase $\gamma$.
+\end{lemma}
+\begin{proof}
+Use Lemma~\ref{lem:blocks} with its block size equal to one. The token
+$\alpha$ has one block with $t=1$; $\beta$ has two blocks with $t=0,1$.
+No concatenation has consecutive zero values of $t$, so every adjacent
+sum is at least one. This proves the first assertion. Multiplication by
+$a^{-1}$ sends moves $a,4a,c=P-a$ to offsets $1,4,-1$ respectively,
+which proves the second. The provided checker also verifies the $64$
+local token positions independently.
+\end{proof}
+The digit $2$ marks the end of each token, and its successive gaps have
+lengths three or five. Thus token parsing is unique. Any symmetry of an
+expanded cyclic word induces a symmetry of its token necklace; this will
+allow least-period proofs using the lengths of maximal $\beta$ clusters.
+
+
+\section{A universal obstruction to pure periodicity}
+We write $z(n)=1$ if $n$ is a losing position of the base game $\{a,4a\}$, and $y(n)=1$ if it is losing in the three-move game. Thus $y(n)=1$ exactly when $G(n)=0$. The base zero residues are
+\[Z=\half{0}{a}\ \cup\ \half{2a}{3a}\pmod{5a}.\]
+
+\begin{lemma}\label{lem:firstzeros}
+For $0\le u<4a$,
+\begin{equation}\label{eq:firstzeros}
+ y(c+u)=(1-z(u))(1-z(c+u-4a)).
+\end{equation}
+\end{lemma}
+\begin{proof}
+If $z(u)=1$, the move $c$ reaches a losing position, so the left side is zero. Otherwise $u\in\half{a}{2a}\cup\half{3a}{4a}$ and $z(u-a)=1$. The position $c+u-a$ has a $c$-move to $u-a$, so it is winning. The $c$-option is winning as well. The remaining $4a$-option lies below $c$ and is losing exactly when $z(c+u-4a)=1$. This proves the formula.
+\end{proof}
+
+\begin{theorem}\label{thm:exclude}
+For every admissible pair, none of $5a,c+a,c+4a$ is a period of $G$ from zero. More strongly, none is a period from zero of the binary losing-position indicator $y$. Hence a pure least nim-period cannot divide any of these three numbers.
+\end{theorem}
+\begin{proof}
+Suppose first that $P=c+4a$ is a pure period of $y$. The initial positions $0\le m<a$ are losing, so $P+m$ must also be losing. Their $a$-options show that $y=0$ on $\half{c+3a}{c+4a}$. In \eqref{eq:firstzeros}, $z(u)=0$ on $\half{3a}{4a}$; hence $z=1$ on $\half{c-a}{c}$. A length-$a$ interval entirely contained in the base zero set must start at $0$ or $2a$ modulo $5a$. Thus $c\equiv a$ or $3a\pmod{5a}$, contrary to coprimality.
+
+Suppose next that $P=c+a$ is pure. Translating the initial losing intervals $\half{0}{a}$ and $\half{2a}{3a}$ by $P$, their $4a$-options imply that both
+\[\half{c-3a}{c-2a}\quad\hbox{and}\quad\half{c-a}{c}\]
+avoid base zeroes. Modulo $5a$, the starting points of length-$a$ zero-free intervals are precisely
+\[\Omega=\{a\}\cup\{3a,3a+1,\ldots,4a\}.\]
+If two starts separated by $2a$ belong to $\Omega$, the first is $a$ or $4a$. Applying this to $c-3a$ forces $c\equiv4a$ or $2a\pmod{5a}$, again impossible.
+
+Finally suppose $P=5a$ is pure. If $4a<c<5a$, then $5a$ would be losing but has a legal $c$-option at the losing position $5a-c\in\half{0}{a}$. If $c>5a$, the first $5a$ positions already have zero set $Z$, so pure $5a$-periodicity would make the entire zero set $Z$ modulo $5a$. The move $c$ must avoid all zero-to-zero differences. The complement of $Z-Z$ in $\Z/(5a)\Z$ is exactly $\{a,4a\}$: subtracting the two displayed zero intervals verifies this directly. Thus $c\equiv a$ or $4a\pmod{5a}$, impossible. The case $c=5a$ is inadmissible. A multiple of any pure period is a pure period, which proves the last assertion.
+\end{proof}
+
+\begin{corollary}\label{cor:short}
+If $c\ge10a$, a pure period cannot be at most $5a$.
+\end{corollary}
+\begin{proof}
+The first $10a$ letters are $B^2$. If $d\le5a$ were a pure period, comparison of positions $n,n+d$ for $0\le n<5a$ would make the circular word $B$ invariant under shift $d$. Its unique maximal $2$-run forces $d$ to be a multiple of $5a$. Thus $d=5a$, excluded by Theorem~\ref{thm:exclude}.
+\end{proof}
+Theorem~\ref{thm:exclude} does not itself restrict eventual periods. The explicit classifications below prove that restriction, after which the obstruction yields universal non-pure-periodicity in Section~\ref{sec:coverage}.
+
+
+\section{The five residue intervals above \texorpdfstring{$6a$}{6a}}\label{sec:large}
+Write uniquely
+\[
+c=(5k+j)a+r,\qquad 0\le j\le4,\quad 0<r<a.
+\]
+Coprimality gives $\gcd(a,r)=1$. For $j=0$ the present range requires $k\ge2$; for $j=1,2,3,4$ it requires $k\ge1$. In this section use
+\[
+U=0^a1^a,\qquad F(x)=0^x2^{a-x}1^x,\qquad R=F(r),\quad S=F(a-r).
+\]
+Here $S$ denotes a word; the move set is denoted by $\mathcal S$.
+
+\subsection{Residue interval \texorpdfstring{$j=0$}{j=0}}
+\begin{theorem}\label{thm:zero}
+Let $c=5ka+r$, $k\ge2$, $0<r<a$, and $\gcd(a,r)=1$. Put $s=a-r$ and
+\[C=0^r3^s1^r,\qquad D_0=C2^sCSC,\qquad H_0=B^kD_0.\]
+If $2r\le a$, then
+\[G=H_0\big((USR)^{k-1}URSR\big)\per,\qquad
+p=c+a,\quad q=(5k+6)a.\]
+If $2r>a$, put
+\[H=H_0(USR)^{k-1}US,\qquad V=F(2a-2r).\]
+Then $G=HW\per$ and $q=(10k+4)a+r$, where
+\[
+\begin{array}{c|c|c}
+\text{condition}&W&p\\\hline
+3r<2a&(RRV)^kR&c+a\\
+3r=2a&RRV=R^3&5a/3\\
+3r>2a&RRV&5a.
+\end{array}
+\]
+The middle row is admissible only for $(a,r)=(3,2)$.
+\end{theorem}
+\begin{proof}
+The recurrence is established by tags $0l,0m,0h$ in Table~\ref{tab:uniform}, their explicit templates in Appendix~\ref{app:uniform}, and Lemma~\ref{lem:affine}. We give the remaining length and minimality details. The lengths are
+\[|D_0|=6a+r,\quad |H_0|=(5k+6)a+r,\quad |H|=(10k+5)a.\]
+In the lower case $W$ contains $k$ maximal zero runs of length $a$ and $2k+1$ other maximal zero runs, all shorter than $a$. Any $m$-fold power would force $m\mid k$ and $m\mid(2k+1)$, so $m=1$. Thus $p=|W|=c+a$. Its final $1$-run has length $r$, agreeing backwards with the last $r$ letters of $H_0$. Immediately before them the prefix has value $3$, whereas $W$ has value $2$. Hence $q=|H_0|-r$.
+
+For the upper long case, $R$ and $V$ have distinct positive zero-run lengths $r,2a-2r$, occurring $2k+1$ and $k$ times. Their counts are coprime, so the word is primitive with length $c+a$. In the upper short case the single exceptional zero-run length gives primitivity of $RRV$ unless $3r=2a$. At equality it is $R^3$, and $R$ has a unique maximal zero run, giving least period $5a/3$.
+
+The prefix $H$ ends with $S$, whose final $1$-run has length $s=a-r$. In the upper long case the tail ends in a $1$-run of length $r>s$, and in the upper short case in one of length $2s>s$. Thus exactly the last $s$ prefix symbols agree with the backwards tail: the preceding prefix value is $2$ and the periodic value is $1$. This also holds at the collapsed-period equality. It proves $q=|H|-s=(10k+4)a+r$.
+\end{proof}
+
+\subsection{Residue interval \texorpdfstring{$j=1$}{j=1}}
+\begin{theorem}\label{thm:first}
+Let $k\ge1$, $1\le r<a$, $\gcd(a,r)=1$, and $c=(5k+1)a+r$. Put
+\[X=0^a1^a2^r,\quad Y=0^a1^a2^{a-r},\quad T=XY,\quad L=5ka.\]
+Then
+\[
+\begin{array}{c|c|c|c}
+\text{condition}&G&p&q\\\hline
+2r<a&B^kT\per&5a&L-a+r=c-2a\\
+2r=a&B^kX\per&5a/2&L-a+r\\
+2r>a&B^k(T^kX)\per&c+a&L-r
+\end{array}
+\]
+The equality case is admissible only for $(a,r)=(2,1)$. All displayed preperiods are positive.
+\end{theorem}
+\begin{proof}
+Extend $B,T$ periodically to all integers. The following bridge identity is valid for every $0<r<a$:
+\begin{equation}\label{eq:bridge}
+ T(x)=\mex\{T(x-a),T(x-4a),B(x-a-r)\}.
+\end{equation}
+Table~\ref{tab:bridge} is a complete interval verification modulo $5a$. Every row has its first value equal to the mex of the other three.
+\begin{table}[ht]\centering\small
+\begin{tabular}{c|c|ccc}\toprule
+$x$ & $T(x)$ & $T(x-a)$ & $T(x-4a)$ & $B(x-a-r)$\\\midrule
+$[0,r)$&0&1&1&1\\
+$[r,a)$&0&2&1&2\\
+$[a,a+r)$&1&0&2&2\\
+$[a+r,2a)$&1&0&0&0\\
+$[2a,2a+r)$&2&1&0&0\\
+$[2a+r,3a)$&0&1&1&1\\
+$[3a,3a+r)$&0&2&1&1\\
+$[3a+r,4a)$&1&0&2&0\\
+$[4a,4a+r)$&1&0&0&0\\
+$[4a+r,5a)$&2&1&0&1\\\bottomrule
+\end{tabular}
+\caption{The bridge identity, with half-open intervals.}\label{tab:bridge}
+\end{table}
+
+We first connect a proposed $T$-shaped suffix at $n=L$ to the actual prefix $B^k$. For $0\le x<a+r$, the position $n=L+x$ is below $c$, and $T(x)$ agrees with $B(x)$. For $a+r\le x<c$, the $c$-predecessor is $x-a-r\in\half0L$ and has value $B(x-a-r)$. The $a$-predecessor is in the suffix. The $4a$-predecessor is also there when $x\ge4a$; otherwise it lies in $B^k$. On the relevant range it differs from Table~\ref{tab:bridge} only as follows:
+\begin{itemize}
+\item On $\half{2a}{2a+r}$, the $4a$ value changes from $0$ to $1$; the other values are $1,0$, so the mex remains $2$.
+\item On $\half{3a}{3a+r}$, it changes from $1$ to $2$; the other values are $2,1$, so the mex remains $0$.
+\end{itemize}
+The earlier difference on $\half a{a+r}$ belongs to the already verified no-$c$ region. This proves the initial connection whenever the proposed suffix agrees with $T$.
+
+For $2r\le a$, the required cyclic identity is obtained by replacing $B(x-a-r)$ in \eqref{eq:bridge} by $T(x-a-r)$. Table~\ref{tab:small} verifies it. For $x\ge c$, all predecessors lie in the suffix and the residue of $c$ is $a+r$, so this cyclic identity and induction complete the recurrence proof.
+\begin{table}[ht]\centering\small
+\begin{tabular}{c|c|ccc}\toprule
+$x$ & $T(x)$ & $T(x-a)$ & $T(x-4a)$ & $T(x-a-r)$\\\midrule
+$[0,r)$&0&1&1&1\\
+$[r,2r)$&0&2&1&1\\
+$[2r,a)$&0&2&1&2\\
+$[a,a+r)$&1&0&2&2\\
+$[a+r,2a)$&1&0&0&0\\
+$[2a,2a+r)$&2&1&0&0\\
+$[2a+r,3a)$&0&1&1&1\\
+$[3a,3a+r)$&0&2&1&1\\
+$[3a+r,3a+2r)$&1&0&2&2\\
+$[3a+2r,4a)$&1&0&2&0\\
+$[4a,4a+r)$&1&0&0&0\\
+$[4a+r,4a+2r)$&2&1&0&0\\
+$[4a+2r,5a)$&2&1&0&1\\\bottomrule
+\end{tabular}
+\caption{The cyclic identity for $2r\le a$. Empty rows at equality are omitted.}\label{tab:small}
+\end{table}
+
+For $2r>a$, put $W=T^kX$ and $P=|W|=c+a$. Its cyclic $2$-run lengths are $r,a-r,r,a-r,\ldots,r,a-r,r$. Adjacent sums are $a$, except for a single $r,r$ join with sum greater than $a$. Lemma~\ref{lem:blocks} applies. Since $c=P-a$, the $c$-predecessor in this periodic word is its forward $a$-neighbour, so the cyclic recurrence holds. The first $P$ letters of $T\per$ form exactly $W$. The connection argument verifies $x<c$. For $c\le x<P$, its $c$-predecessor has index $x-a-r\in\half L{L+a}$ and value zero, which agrees with the base value in \eqref{eq:bridge}. Thus the rest of the first $W$ is verified as well. For $x\ge P$, all predecessors lie in the suffix and the cyclic argument applies.
+
+It remains to prove minimality. If $2r<a$, the two circular maximal $2$-runs in $T$ have distinct lengths $r,a-r$, so its unique length-$r$ run forces period $5a$. At equality $T=X^2$, and the unique $2$-run in $X$ forces period $|X|=5a/2$. If $2r>a$, the unique adjacent run-length signature $r,r$ in $W$ forces period $P$.
+
+Extend the appropriate suffix backwards from $L$. In the first two cases it agrees with the actual prefix on $\half{L-a+r}{L}$, where both values are $2$, and differs at $L-a+r-1$, where the actual value is $2$ and the extension is $1$. In the last case it agrees on $\half{L-r}{L}$ and differs at $L-r-1$ in the same way. Every earlier starting point for the least period would force that mismatch to agree with its congruent future tail value. This proves the asserted least preperiods. Finally $2r=a$ and $\gcd(a,r)=1$ force $a=2,r=1$.
+\end{proof}
+
+\subsection{Residue interval \texorpdfstring{$j=2$}{j=2}}
+\begin{theorem}\label{thm:second}
+Let $c=(5k+2)a+r$, $k\ge1$, $0<r<a$, and $\gcd(a,r)=1$, with $U,F,R,S$ as above. For $2r<a$, put
+\begin{align*}
+H&=B^kURS\,3^rSR\,(USR)^{k-1}(URS)^kUR,\\
+N&=|H|=(15k+6)a+2r,\qquad V=F(2r).
+\end{align*}
+Then $G=HW\per$, $q=N-r=(15k+6)a+r$, and
+\[
+\begin{array}{c|c|c}
+\text{condition}&W&p\\\hline
+3r<a&(SVS)^kSV&c+a\\
+3r=a&SVS=S^3&5a/3\\
+3r>a&SVS&5a.
+\end{array}
+\]
+For $2r>a$, put $E=3^{2r-a}$ and
+\begin{align*}
+H&=B^kURS\,3^rSR\,(USR)^kUSE S(URS)^{k+1}E,\\
+N&=|H|=(15k+17)a+3r,\qquad V=F(2a-2r).
+\end{align*}
+Then $G=HW\per$, with
+\[
+\begin{array}{c|c|c|c}
+\text{condition}&W&p&q\\\hline
+3r<2a&VRR&5a&N\\
+3r=2a&VRR=R^3&5a/3&N\\
+3r>2a&(VRR)^{k+1}V3^{3r-2a}&c+4a&(15k+19)a.
+\end{array}
+\]
+At the omitted midpoint $2r=a$, primitivity forces $(a,r)=(2,1)$, and Theorem~\ref{thm:a2} gives $p=10$, $q=10k+11$. At the one-third and two-thirds equalities, primitivity forces $(a,r)=(3,1)$ or $(3,2)$, respectively.
+\end{theorem}
+\begin{proof}
+The recurrence is proved by the four tags beginning with $2$ in Table~\ref{tab:uniform} and Appendix~\ref{app:uniform}, using Lemma~\ref{lem:affine}. The lower long word has $2k+1$ zero runs of length $a-r$ and $k+1$ of the distinct length $2r$. Since these counts are coprime it is primitive, of length $c+a$. The lower short word has a unique exceptional zero run unless $3r=a$, when it is $S^3$ with primitive root $S$. In the upper short case the analogous unique zero run is of length $2a-2r$, except at $3r=2a$, when the primitive root is $R$. In the upper long case the unique nonempty maximal $3$-run forces primitivity and length $c+4a$.
+
+In the lower half, $H$ ends with a $1$-run of length $r$, whereas the tail ends with a strictly longer one: length $2r$ in the long case and $a-r$ in the short case. The backwards extension therefore matches exactly these last $r$ symbols, with preceding mismatch $2$ versus $1$, so $q=N-r$, including the one-third equality.
+
+In the upper short case, $H$ ends in $3$ and the tail ends in $1$, so $q=N$, including the two-thirds equality. In the upper long case the prefix ends in $3^e$, $e=2r-a$, and the tail ends in $3^h$, $h=3r-2a$. Since $e-h=a-r>0$, exactly the last $h$ symbols agree backwards; the preceding values are $3$ and $1$. Hence $q=N-h=(15k+19)a$. The midpoint follows from the separate all-$a=2$ theorem and is not obtained by extending either adjacent formula.
+\end{proof}
+
+\subsection{Residue interval \texorpdfstring{$j=3$}{j=3}}
+\begin{theorem}\label{thm:third}
+Let $c=(5k+3)a+r$, $k\ge1$, $0<r<a$, and $\gcd(a,r)=1$. Put
+\[T=0^a1^a2^r0^a1^a2^{a-r},\qquad H=B^{k+1}0^r3^{a-r}.\]
+Then $G=HW\per$ and $q=(5k+6)a$, where
+\begin{align*}
+W&=1^r2^{a-r}T^{k+1}0^{2r}3^{a-2r}1^r&&\text{if }2r<a,\\
+W&=1^r2^{a-r}0^a1^a2^r0^a1^{a-r}&&\text{if }2r\ge a.
+\end{align*}
+The least period is $c+4a$ for $2r<a$, $5a$ for $2r>a$, and $5a/2$ for $2r=a$. The equality case is admissible only for $(a,r)=(2,1)$.
+\end{theorem}
+\begin{proof}
+Tags $3l,3h$ in the uniform certificate prove the recurrence. In the lower case $W$ has exactly one nonempty circular maximal $3$-run, so it is primitive of length $c+4a$. In the upper case, circularly the zero and one runs have length $a$ and the two $2$-runs have lengths $r,a-r$. Unequal lengths force primitivity of the length-$5a$ word. At equality a rotation of the word is $(0^a1^a2^r)^2$ with primitive root length $5a/2$.
+
+The prefix length is $(5k+6)a$, and its last value is $3$. The last value of the backwards periodic extension is $1$, also when the displayed word has a smaller primitive root. This proves the least preperiod.
+\end{proof}
+
+
+
+\subsection{Residue interval \texorpdfstring{$j=4$}{j=4}}
+\begin{theorem}\label{thm:fourth}
+Let $k\ge1$, $0<r<a$, $\gcd(a,r)=1$, and $c=(5k+4)a+r$. Define
+\begin{align*}
+ D&=3^r0^{a-r}2^r1^{a-r}3^r0^a1^a2^{a-r}3^r,\\
+ A&=0^a1^a2^r0^a1^a2^a,\qquad W=B^kA.
+\end{align*}
+Then
+\[G=B^{k+1}D W\per,\qquad p=c+a,\qquad q=c+6a.\]
+In particular the condition $k\ge1$ is part of the theorem; it does not include every $4a<c<5a$.
+\end{theorem}
+\begin{proof}
+Write $L=5(k+1)a$, $P=L+r=c+a$, and $Q=L+5a+r=c+6a$. First the proposed periodic suffix $W$ obeys the cyclic recurrence. Its blocks $0^a1^a2^t$ have cyclic $t$-values
+\[0,a,0,a,\ldots,0,a,r,a.\]
+Every adjacent sum is at least $a$, so Lemma~\ref{lem:blocks} applies. Again $c=P-a$ turns its forward $a$-neighbour into the required $c$-predecessor.
+
+We verify the initial connection in three finite tables. Before $c$, the sequence is the base sequence. On $\half cL$, the proposed value is $2$, the two small moves already supply $0,1$, and the added $c$-option is zero. Hence the entire prefix $B^{k+1}$ is correct.
+
+For $n=L+t$, $0\le t<5a+r$, the $c$-predecessor has index $t+a-r<6a\le L$ and is a base value. Table~\ref{tab:D} gives all option values and verifies $D$ by induction. All endpoints are linear in $a,r$ and are ordered as shown for every $0<r<a$.
+\begin{table}[ht]\centering\small
+\begin{tabular}{c|c|ccc}\toprule
+$t$ & $G(n)$ & $G(n-a)$ & $G(n-4a)$ & $G(n-c)$\\\midrule
+$[0,r)$&3&2&1&0\\
+$[r,a)$&0&2&1&1\\
+$[a,a+r)$&2&3&0&1\\
+$[a+r,2a)$&1&0&0&0\\
+$[2a,2a+r)$&3&2&1&0\\
+$[2a+r,3a)$&0&1&1&1\\
+$[3a,3a+r)$&0&3&2&1\\
+$[3a+r,4a)$&1&0&2&2\\
+$[4a,4a+r)$&1&0&3&2\\
+$[4a+r,5a)$&2&1&0&0\\
+$[5a,5a+r)$&3&1&2&0\\\bottomrule
+\end{tabular}
+\caption{The transient $D$, with $n=L+t$.}\label{tab:D}
+\end{table}
+
+Next put $n=Q+u$, $0\le u<c$. For $0\le u<4a$, the two small-move predecessors can still lie in $D$, and Table~\ref{tab:early} verifies the recurrence. Here the $c$-predecessor lies at $6a+u$ in the base prefix; the assumption $L\ge10a$ is used.
+\begin{table}[ht]\centering\small
+\begin{tabular}{c|c|ccc}\toprule
+$u$ & $G(n)$ & $G(n-a)$ & $G(n-4a)$ & $G(n-c)$\\\midrule
+$[0,a-r)$&0&2&1&1\\
+$[a-r,a)$&0&3&3&1\\
+$[a,2a)$&1&0&0&0\\
+$[2a,3a)$&0&1&1&1\\
+$[3a,4a-r)$&1&0&2&2\\
+$[4a-r,4a)$&1&0&3&2\\\bottomrule
+\end{tabular}
+\caption{The beginning of the suffix, with $n=Q+u$.}\label{tab:early}
+\end{table}
+For $4a\le u<L-6a$, the two small predecessors already lie in $W\per$ and the $c$-predecessor is $B(6a+u)=B(a+u)$, exactly the required cyclic forward neighbour. This interval may be empty. For the remaining positions write
+\[u=L-6a+v,\qquad0\le v<5a+r.\]
+The $c$-predecessor is now $D(v)$. Relative to the start of $A$ in $W$, the current position is $v-a$; its small predecessors are at $v-2a,v-5a$. Table~\ref{tab:late} verifies them. Since $L-6a\ge4a$, both small predecessors are in the suffix, including the endpoint case $k=1$. These intervals cover $0\le u<c$. For $n\ge Q+c$, every predecessor lies in the suffix, so the already proved cyclic recurrence finishes the induction.
+\begin{table}[ht]\centering\small
+\begin{tabular}{c|c|ccc}\toprule
+$v$ & $G(n)$ & $G(n-a)$ & $G(n-4a)$ & $G(n-c)$\\\midrule
+$[0,r)$&2&1&0&3\\
+$[r,a)$&2&1&0&0\\
+$[a,a+r)$&0&2&1&2\\
+$[a+r,2a)$&0&2&1&1\\
+$[2a,2a+r)$&1&0&0&3\\
+$[2a+r,3a)$&1&0&0&0\\
+$[3a,3a+r)$&2&1&1&0\\
+$[3a+r,4a)$&0&1&1&1\\
+$[4a,4a+r)$&0&2&2&1\\
+$[4a+r,5a)$&1&0&2&2\\
+$[5a,5a+r)$&1&0&0&3\\\bottomrule
+\end{tabular}
+\caption{The delayed transient, with $n=Q+L-6a+v$.}\label{tab:late}
+\end{table}
+
+The circular word $W$ has exactly one maximal $2$-run of length $r$, all its other maximal $2$-runs having length $a$. Since $0<r<a$, it is primitive, and $p=P$. The last symbol before $Q$ is $3$, while the suffix contains no $3$. In particular $G(Q-1)\ne G(Q-1+P)$, so $q=Q$ by Lemma~\ref{lem:certificate}.
+\end{proof}
+
+\begin{corollary}[Complete classification above $6a$]\label{cor:large}
+The five preceding constructions, with the midpoint cases of Theorem~\ref{thm:a2}, classify every admissible $c>6a$. Each has positive least preperiod.
+\end{corollary}
+\begin{proof}
+Euclidean division gives exactly one of the five cases with the stated lower bound on $k$. The displayed least-preperiod formulas are all positive.
+\end{proof}
+
+
+\section{The affine atlas between \texorpdfstring{$4a$}{4a} and \texorpdfstring{$6a$}{6a}}\label{sec:atlas}
+In this section write $c=da+r$, where $d=4$ or $5$ and $0<r<a$, and put $t=r/a$. The change of behavior near $c=5a$ is governed by increasingly fine rational intervals. Finite affine words give a structural classification on each interval without a state search.
+
+\begin{theorem}[The two affine atlases]\label{thm:atlas}
+For $c=4a+r$ and $0<t\le40/41$, and for $c=5a+r$ and $1/41\le t<1$, the full sequence is $HW\per$. On open cones, $H,W$ are given by the affine run lists in \path{certificates/atlas.json}, with $|H|=q$ and $|W|=p$ least. The lower atlas has $43$ cones and $43$ positive rational seams; the upper atlas has $46$ cones and $46$ rational seams. Every seam is represented by its exact full-word certificate in \path{certificates/seams.json}. Throughout these ranges $q>0$ and $p\in\{5,5a,c+a\}$.
+\end{theorem}
+\begin{proof}
+For each row the independent verifier checks positivity of the run lengths and the stated affine total lengths. It forms $HW^e$, with $e=2$ or $3$ chosen so that the verification horizon exceeds $q+c+p$. The complete shifted affine endpoint order is proved by adjacent inequalities at both cone endpoints. Lemma~\ref{lem:atlas} then reduces the recurrence to exact mex checks on the coordinate cells. There are $167\,328$ such checks for the lower atlas and $183\,422$ for the upper, totaling $350\,750$.
+
+For every cone the checker excludes all circular-run symmetries, including any isolated interior parameter where unequal affine lengths could coincide. It also checks a different last symbol in $H$ and $W$. Lemma~\ref{lem:atlas-min} therefore proves the least period and earliest preperiod throughout each open cone. The ordered interval list has no gaps other than the explicitly listed seams. Each seam is a single primitive pair by that lemma; its stored prefix and primitive block pass the finite-word certificate, independently of its complete-state discovery. This proves the closed outer endpoints as well as all internal seams. The recorded period formulas and seam values give the stated period set.
+\end{proof}
+
+The full words are finite symbolic data: substituting $(a,r)$ in a row's run lengths constructs the sequence, even for arbitrarily large coprime pairs in that cone. Their total number of runs grows near $t=1$ in the lower atlas and near $t=0$ in the upper atlas. The large lists are accompanying mathematical data, not a table of sampled games. The concise arithmetic formulas follow.
+
+\subsection{Reading a complete electronic record}\label{sec:record-example}
+An atlas record has identifier $(B,\ell,h)$, where \texttt{base}$=B$,
+\texttt{lo}$=\ell$ and \texttt{hi}$=h$ are exact rational numbers.
+The open condition is $\ell<r/a<h$. A run
+$[v,[u,w]]$ means $v^{ua+wr}$; the lists \texttt{prefix} and
+\texttt{period} concatenate these runs in their stored order.
+The two coefficient pairs \texttt{q}, \texttt{p} give the lengths
+$q=q_0a+q_1r$, $p=p_0a+p_1r$. The fields \texttt{seed} and
+\texttt{runs} are discovery metadata and have no role in evaluation or proof;
+\texttt{singleton} is false for every open record.
+
+For example, the actual record $(B,\ell,h)=(4,0,1/2)$ has
+$\texttt{p}=[5,1]$, $\texttt{q}=[10,1]$. Its complete run lists decode to
+\begin{align*}
+H={}&0^a1^a0^a1^a2^a3^r0^{a-r}2^r1^{a-r}3^r
+       0^a1^a2^{a-r}3^r,\\
+W={}&0^a1^a2^r0^a1^a2^a.
+\end{align*}
+Every run is positive for $0<r<a/2$; summing gives $|H|=10a+r$,
+$|W|=5a+r$. Thus $(a,c)=(3,13)$ has $r=1$, $t=1/3$ and
+\[
+H=0001110001112223002113000111223,\qquad
+W=0001112000111222.
+\]
+Here $(p,q)=(16,31)$, and $G(n)=H(n)$ for $n<31$,
+$G(n)=W((n-31)\bmod16)$ thereafter. The two circular $2$-runs
+in $W$ have unequal lengths $1,3$, preventing a nontrivial rotation;
+the last symbols of $H,W$ are $3,2$. The recurrence certificate checks
+the entire cone, not only this specialization. These separate facts
+establish recurrence validity, least period and earliest preperiod.
+
+A seam record instead contains literal digit strings \texttt{prefix}
+and \texttt{block} and integer lengths \texttt{q}, \texttt{p}.
+If its rational identifier is $(B,t)$ with $t=u/v$ reduced, it represents
+exactly $(a,c)=(v,Bv+u)$. The word is never a limiting open-cone formula.
+For example, $(B,t)=(4,1/2)$ is $(a,c)=(2,9)$, with
+$H=001100112230213001123$, $W=00112001122$, and $(p,q)=(11,21)$.
+The verifier checks this association, uniqueness of both identifiers and
+primitive pairs, and equality with the required endpoint inventory before
+checking any word. Optional state-search fields are provenance; the proof
+uses the recurrence, primitive block and last mismatch, not a claim that
+an unverified search found its first repeated state.
+
+
+\subsection{The lower side: \texorpdfstring{$c=4a+r$}{c=4a+r}}
+For all open intervals in the following table, $p,q$ are exact.
+\begin{center}\small
+\begin{tabular}{c|c|c}\toprule
+$t$ interval & $p$ & $q$\\\midrule
+$(0,1/2)$ & $c+a$ & $10a+r$\\
+$(1/2,3/5)$ & $c+a$ & $23a+2r$\\
+$(3/5,5/8)$ & $c+a$ & $46a+5r$\\
+$(5/8,2/3)$ & $5a$ & $46a+5r$\\
+$(2/3,5/7)$ & $5a$ & $25a+6r$\\
+$(5/7,3/4)$ & $c+a$ & $30a-r$\\
+$(3/4,4/5)$ & $c+a$ & $23a+4r$\\
+$(4/5,5/6)$ & $c+a$ & $51a+5r$\\
+$(5/6,6/7)$ & $c+a$ & $56a-r$\\
+$(6/7,7/8)$ & $c+a$ & $36a+7r$\\
+$(7/8,8/9)$ & $c+a$ & $74a+8r$\\
+$(8/9,9/10)$ & $c+a$ & $82a-r$\\\bottomrule
+\end{tabular}
+\end{center}
+The remaining lower cones can be compressed arithmetically. For every integer $m\ge10$, on
+\[
+\frac{m-1}{m}<t<\frac{m}{m+1},
+\]
+one has $p=c+a$ and
+\[
+q=\begin{cases}
+\dfrac{26m+12}{3}a-r,&m\equiv0\pmod3,\\[3pt]
+\dfrac{23m-47}{3}a+(m-3)r,&m\equiv1\pmod3,\\[3pt]
+\dfrac{23m+38}{3}a+mr,&m\equiv2\pmod3.
+\end{cases}
+\]
+For $10\le m\le40$ this follows from the $31$ affine word certificates; for every larger $m$ it is the lower uniform theorem after substituting $d=a-r$. Thus the arithmetic formula is unbounded. Rational seams use their separate formulas or exact certificates.
+
+There is a short full-word expression on the first cone, including its positive endpoint. Put
+\begin{align*}
+D&=3^r0^{a-r}2^r1^{a-r}3^r0^a1^a2^{a-r}3^r,\\
+A&=0^a1^a2^r0^a1^a2^a.
+\end{align*}
+For $0<r\le a/2$,
+\begin{equation}\label{eq:lower-simple}
+G=BD A\per,\qquad p=5a+r=c+a,\qquad q=10a+r.
+\end{equation}
+Its recurrence is the first affine-cone certificate, with $t=1/2$ checked separately. The circular word $A$ has a unique $2$-run of length $r<a$, so it is primitive. The prefix ends in $3$ and the tail contains no $3$, proving the exact preperiod. This direct description will also be useful for the non-pure-periodicity theorem.
+
+\subsection{The upper side: \texorpdfstring{$c=5a+r$}{c=5a+r}}
+The open-cone arithmetic formulas away from zero are
+\begin{center}\small
+\begin{tabular}{c|c|c}\toprule
+$t$ interval & $p$ & $q$\\\midrule
+$(1/7,2/13)$ & $c+a$ & $65a+6r$\\
+$(2/13,1/6)$ & $5a$ & $65a+6r$\\
+$(1/6,3/17)$ & $5a$ & $123a+17r$\\
+$(3/17,2/11)$ & $c+a$ & $126a$\\
+$(2/11,1/5)$ & $c+a$ & $61a$\\
+$(1/5,1/4)$ & $c+a$ & $27a$\\
+$(1/4,1/3)$ & $5a$ & $25a+2r$\\
+$(1/3,2/5)$ & $5a$ & $19a+4r$\\
+$(2/5,3/7)$ & $5a$ & $37a+7r$\\
+$(3/7,1/2)$ & $c+a$ & $40a$\\
+$(1/2,2/3)$ & $c+a$ & $14a+r$\\
+$(2/3,1)$ & $5a$ & $14a+r$\\\bottomrule
+\end{tabular}
+\end{center}
+For every integer $n\ge7$, on
+\[
+\frac1{n+1}<t<\frac1n,
+\]
+one has $p=c+a$ and, writing $n$ in its indicated residue class,
+\[
+q=\begin{cases}
+(26m+13)a+3mr,&n=3m,\\
+(26m-1)a+(3m-1)r,&n=3m+1,\\
+(26m+40)a,&n=3m+2.
+\end{cases}
+\]
+The $34$ affine certificates prove $7\le n\le40$; the upper uniform theorem proves every $n\ge41$. This gives one arithmetic formula for all these open cones, while keeping the recurrence and seam proofs distinct.
+
+For $t>1/2$ a short word formula is available. Retain $U,F,R,S$ from Section~\ref{sec:large}, put $s=a-r$, $V=F(2s)$, $C=0^r3^s1^r$, and
+\[
+H=B\,C2^sCSC\,US.
+\]
+Then $G=HW\per$, where $W=RRVR$ for $1/2<t<2/3$, and $W=RRV$ for $2/3\le t<1$. The recurrence has its own affine certificate at this smaller value of $c$; it is not obtained by substituting an excluded value of $k$ in the large-$c$ theorem. Since $|H|=15a$ and exactly its last $s$ letters match the backward tail, $q=14a+r$. The unique exceptional zero-run proves $p=c+a$ or $5a$ in the strict cases. At $t=2/3$, coprimality forces $(a,r)=(3,2)$, $R=V$, and $W=R^3$ has least period $5$.
+
+\subsection{Rational seams and the junction of the constructions}
+The file \path{coverage.csv} gives every open cone and seam in a single inventory. At a seam $t=h/d$, one uses its entry $(a,r)=(d,h)$, not a limiting formula. For example, the two endpoints at the junction with the uniform constructions are
+\[
+(a,c,p,q)=(41,204,245,13411),\qquad(41,206,247,13855).
+\]
+Both values are verified by the electronic seam certificates. These endpoints belong to the atlas. The following uniform constructions cover every closer parameter, including both infinite integer-ratio seam families; no limiting argument for minimality is needed.
+
+
+\section{The upper side of the central strip}\label{sec:upper-central}\label{sec:upper-uniform}
+
+This section treats $c=5a+d$, with $d>0$, in the unbounded
+quotient range.  We use the fixed digit words
+\[
+ \alpha=012,\qquad \beta=01012,\qquad
+ \rho=\alpha\beta=01201012,\qquad \omega=01012323.
+\]
+Word positions are numbered from zero.  An index into a cyclic word is
+always reduced modulo its length.  In particular, the construction below
+specifies every initial value as well as the eventual word; it is not a
+procedure that generates the recurrence until a repeated state appears.
+
+\subsection{Explicit half-strip columns}
+
+For $j=3h+r$, $h\ge0$ and $0\le r<3$, define the infinite word
+\begin{equation}\label{eq:upper-front}
+ F_j^+=\omega^{2h}H_rM_r^{2h}K_r\rho^\infty,
+\end{equation}
+where the empty word is denoted by $\varepsilon$:
+\begin{center}\small
+\begin{tabular}{ccllc}\toprule
+$r$&$H_r$&$M_r$&$K_r$&$Q_r=|H_r|+|K_r|$\\\midrule
+0&$\varepsilon$&$01012$&$010120101201$&12\\
+1&$01012323013$&$01012$&$0101201$&18\\
+2&$01012323010123$&$20101$&$201012010120101201$&32\\\bottomrule
+\end{tabular}
+\end{center}
+The final $\rho$ portion starts at
+\begin{equation}\label{eq:upper-front-onset}
+ Q(j)=26h+Q_r.
+\end{equation}
+Since $Q_r-6r$ is respectively $12,12,20$, its value is
+$\rho[(y-6j-4)\bmod8]$ whenever $y\ge Q(j)$.
+
+\begin{lemma}[Upper half-strip identity]\label{lem:upper-front}
+For every integer $y\ge0$ and $j>0$,
+\begin{equation}\label{eq:upper-front-mex}
+ F_j^+(y)=\mex\{F_j^+(y-1),F_j^+(y-4),F_{j-1}^+(y-5)\},
+\end{equation}
+where an operand with negative argument is omitted.  For $j=0$, the
+third operand is instead $\omega[(y-6)\bmod8]$, present only for $y\ge6$.
+\end{lemma}
+\begin{proof}
+This is a word identity, with a finite verification justified by
+Lemma~\ref{lem:macro40}.  Here are the complete parameter reduction and
+verification bounds.  The case $j=0$ is checked for $0\le y<100$;
+the assertion is $8$-periodic after $y=18$.  For $j=3h+r>0$, the previous
+column has residue $r-1$, with $h$ replaced by $h-1$ precisely when
+$r=0$.  Thus the admissible values are $h\ge1$ for $r=0$ and $h\ge0$
+for $r=1,2$.
+
+Split each fixed string into individual characters and retain powers
+of $\omega,M_r,\rho$ as periodic segments.  Include every segment
+endpoint shifted by its recurrence delay, the availability thresholds
+$0,1,4,5$, and the horizon $26h+100$.  All endpoints are affine in $h$
+with even slopes, and all segment periods divide $40$.  At $h=20$,
+the certificate verifies that their order remains fixed for all larger
+$h$, every growing cell has length at least $40$, and every omitted
+endpoint remains outside the verification interval.  Accordingly,
+direct verification below $20$ and the first $40$ positions of each
+cell for $h=20,\ldots,39$ prove all $h$.  Every delayed argument is in
+its final $\rho$ segment by $26h+92$, so the final eight verified phases
+extend the identity to all larger $y$.
+
+The function \texttt{front\_checks} in
+\path{upper_splice_certificate.py} performs these exact checks,
+including the endpoint-order inequalities, and verifies $30\,520$
+positions.  This proves the displayed identity for every column and
+every height.
+\end{proof}
+
+\subsection{The two tower words and the full sequence}
+
+Suppose first that
+\begin{equation}\label{eq:upper-open-domain}
+ a=kd+b,\quad 0<b<d,\quad \gcd(b,d)=1,\quad k\ge41,
+ \qquad k=3m+s,\quad 0\le s<3.
+\end{equation}
+Put $P=6a+d=c+a$.  Define the digit words $X_s,Y_s$ and the cut $D_s$
+by the following table:
+\begin{center}\small
+\begin{tabular}{cllc}\toprule
+$s$&$X_s$&$Y_s$&$D_s$\\\midrule
+0&$\rho^{m-2}\beta^{2m+3}\rho$
+ &$\rho^{m-3}\beta^{2m+5}$&$8m+28$\\
+1&$\rho^{m-1}\alpha\alpha\beta^{2m+3}$
+ &$\rho^{m-1}\beta^{2m+3}$&$8m+20$\\
+2&$\alpha\beta^{2m+8}\rho^{m-3}$
+ &$\alpha\alpha\beta^{2m+3}\rho^{m-1}$&$16m+12$\\\bottomrule
+\end{tabular}
+\end{center}
+Their lengths are
+\begin{equation}\label{eq:upper-tower-lengths}
+ |X_s|=6k+7,\qquad |Y_s|=6k+1.
+\end{equation}
+Set
+\[
+ \epsilon_i=\left\lfloor\frac{(i+1)b}{d}\right\rfloor
+             -\left\lfloor\frac{ib}{d}\right\rfloor
+ \quad(0\le i<d),
+ \qquad
+ T=\prod_{i=0}^{d-1}
+ \begin{cases}X_s,&\epsilon_i=1,\\Y_s,&\epsilon_i=0.\end{cases}
+\]
+Thus $T$ is a specified finite word of length $P$, containing $b$ copies
+of $X_s$ and $d-b$ copies of $Y_s$.  Since $\gcd(a,P)=1$, let $v$ be
+the inverse of $a$ modulo $P$, and define the bi-infinite cyclic function
+\begin{equation}\label{eq:upper-cycle}
+ C(n)=T[(vn-D_s)\bmod P]\qquad(n\in\mathbb Z).
+\end{equation}
+
+\begin{theorem}[Upper unbounded quotient range]\label{thm:upper-near}
+Under \eqref{eq:upper-open-domain}, write every $n\ge0$ uniquely as
+\[
+ n=ay+jd+e,\qquad 0\le jd+e<a,\qquad 0\le e<d.
+\]
+The full nim-sequence for $\{a,4a,5a+d\}$ is
+\begin{equation}\label{eq:upper-full-word}
+ G(n)=
+ \begin{cases}
+ F_j^+(y),&y-6j<D_s,\\
+ C(n),&y-6j\ge D_s.
+ \end{cases}
+\end{equation}
+Its least eventual period is $p=P=6a+d$, and its earliest preperiod is
+\begin{equation}\label{eq:upper-q}
+ q=
+ \begin{cases}
+ (26m+13)a+3md,&s=0,\\
+ (26m-1)a+(3m-1)d,&s=1,\\
+ (26m+40)a,&s=2.
+ \end{cases}
+\end{equation}
+In particular, $q>0$.  The repeating word
+starting at its earliest possible position is explicitly
+$W(t)=C(q+t)$ for $0\le t<P$.
+\end{theorem}
+
+\begin{proof}[Stationarity, tower coordinates, and least period]
+By Lemma~\ref{lem:tokens}, every bi-infinite concatenation of
+$\alpha,\beta$ satisfies
+$f(t)=\mex\{f(t-1),f(t+1),f(t-4)\}$.
+The moves $a,4a,c$ become offsets $1,4,-1$ under multiplication by $v$
+modulo $P$.  Therefore $C$ satisfies the cyclic game recurrence.
+
+Let $L_i$ be the length of the first $i$ tower words in $T$.  Directly,
+\begin{equation}\label{eq:upper-tower-coordinate}
+ \begin{aligned}
+ L_i&=(6k+1)i+6\left\lfloor\frac{ib}{d}\right\rfloor
+     =6\left\lfloor\frac{ia}{d}\right\rfloor+i,\\
+ e_i&=ia-d\left\lfloor\frac{ia}{d}\right\rfloor,
+ &aL_i-e_i&=P\left\lfloor\frac{ia}{d}\right\rfloor.
+ \end{aligned}
+\end{equation}
+Thus $aL_i\equiv e_i\pmod P$ by an integer identity, with
+$0\le e_i<d$; no cancellation of $d$ modulo $P$ is used.
+The map $e\mapsto e+b\bmod d$ visits all these residues.  Under repeated
+addition of $a$ modulo $P$, the first return from a residue $e\in[0,d)$
+to that interval takes $6k+1$ steps if $e<d-b$ and $6k+7$ steps otherwise;
+the return residue is $e+b\bmod d$.  To check that this is the first
+return, write a prospective step as $t=6u+v$, $0\le v<6$.
+Then $e+ta\equiv e+va-ud\pmod P$.  Before the stated return,
+$v=0$ gives a negative representative for $t>0$, $v\ge2$ gives a
+representative between $d$ and $P$, and $v=1$ first enters $[0,d)$
+at $u=k$ or $k+1$ according as $e+b<d$ or $e+b\ge d$.
+The lengths of these returns sum to $P$, so the towers partition
+the cyclic positions.
+
+If $e\equiv ia\pmod d$ and $z=y-6j$, then $vd\equiv-6\pmod P$ gives
+\begin{equation}\label{eq:upper-local-cycle}
+ C(ay+jd+e)=T[(L_i+z-D_s)\bmod P].
+\end{equation}
+Consequently $z=D_s$ is precisely the start of the tower attached to
+the residual coordinate $e$.
+
+For primitivity, view $T$ as a word in the two tokens $\alpha,\beta$.
+Every tower begins with $\alpha$, ends with $\beta$, and contains
+exactly one maximal consecutive $\beta$ run longer than one.  The
+two possible lengths of this run are
+\[
+\begin{array}{c|cc}
+s&X_s&Y_s\\\hline
+0&2m+4&2m+6\\
+1&2m+3&2m+4\\
+2&2m+8&2m+3
+\end{array}
+\]
+and distinguish the two tower types.  If $T$ were an $h$-fold cyclic
+power, $h$ would divide both marker counts $b$ and $d-b$, so $h=1$.
+The digit $2$ marks exactly the end of each token.  A symmetry of the
+digit word therefore induces a symmetry of the token word, proving
+digit primitivity.  Finally, multiplication by the invertible residue
+$v$ carries any physical period of $C$ to a cyclic shift symmetry of
+$T$.  Hence the least period of $C$ is $P$.
+\end{proof}
+
+\begin{proof}[Initialized recurrence and the splice]
+We verify \eqref{eq:upper-full-word} in the original recurrence,
+including move availability.  The $a$ and $4a$ options are available
+exactly when $y\ge1$ and $y\ge4$.  For $j\ge1$, the $c$ option is
+available exactly when $y\ge5$, and has coordinates $(y-5,j-1,e)$.
+In the coordinate $z=y-6j$, the three option coordinates are therefore
+$z-1,z-4,z+1$.
+
+Away from the cut, either Lemma~\ref{lem:upper-front} or the cyclic
+recurrence applies to all operands.  Only $z=D_s-1,\ldots,D_s+3$ can
+mix the two formulas.  Every column $j\le k$ is in its final $\rho$
+phase when $z\ge D_s-4$.  Each tower begins with $0120$ and ends with
+$\rho$, while $D_s\equiv4\pmod8$.  Thus the front and the local cyclic
+word agree throughout $z=D_s-4,\ldots,D_s+3$.  Each option crossing the
+cut can be replaced by its other expression without changing its
+value, which verifies every ordinary interface.
+
+It remains to check $j=0$.  Put
+\[
+ \delta=\left\lfloor\frac{e+b}{d}\right\rfloor\in\{0,1\},
+ \qquad e'=e+b-\delta d,\qquad L=6k+6\delta+1.
+\]
+The $c$ option is now available exactly when $y\ge6$ and has
+coordinates $(y-6,k-1+\delta,e')$.  Its cut coordinate is $y-(L-1)$.
+The current tower is $V=Y_s$ if $\delta=0$, and $V=X_s$ if $\delta=1$.
+For $y\ge D_s+L-1$ all operands are cyclic.  Before that height,
+the current spliced column is the word
+\[
+ S=K_0\rho^{N_s}V,
+ \qquad N_s=
+ \begin{cases}m+2,&s=0,\\m+1,&s=1,\\2m,&s=2,\end{cases}
+ \qquad |S|=D_s+L,
+\]
+and the third option is still in $F^+_{k-1+\delta}$.  The remaining
+assertion is exactly
+\begin{equation}\label{eq:upper-boundary-certificate}
+ S(y)=\mex\bigl(
+ \{S(y-1):y\ge1\}\cup\{S(y-4):y\ge4\}
+ \cup\{F^+_{k-1+\delta}(y-6):y\ge6\}\bigr),
+ \quad 0\le y<|S|-1.
+\end{equation}
+
+There are only six parameterized identities, indexed by $(s,\delta)$.
+For completeness, their exact reduction bounds are given below.
+Split fixed words into characters.  Form every endpoint of $S$ shifted
+by $0,1,4$, every endpoint of the input front shifted by $6$, and the
+endpoints $0,|S|-1$.  All have the form $Am+B$ with even $A$; the
+minimum positive slope gap is $8$.  The input front is extended by
+$\rho^{2m+10}$, and an affine length inequality verifies that this
+covers every required input for $m\ge13$.  If the constants range
+over $[B_-,B_+]$, choose $K$ so that
+$8K-(B_+-B_-)\ge40$.  Lemma~\ref{lem:macro40} then reduces all $m\ge13$
+to $m=13,\ldots,K+19$.
+\begin{center}\small
+\begin{tabular}{cccrr}\toprule
+$s$&$\delta$&$[B_-,B_+]$&$K$&verified positions\\\midrule
+0&0&$[-10,92]$&18&16\,950\\
+0&1&$[0,98]$&18&17\,100\\
+1&0&$[0,98]$&18&16\,900\\
+1&1&$[0,104]$&18&17\,050\\
+2&0&$[0,104]$&18&21\,850\\
+2&1&$[0,118]$&20&24\,678\\\bottomrule
+\end{tabular}
+\end{center}
+The standalone certificate \path{upper_boundary_uniform.py} verifies
+these bounds and all $114\,528$ positions of
+\eqref{eq:upper-boundary-certificate}.  All endpoints are integers and
+segments are half-open.  In particular, $e=d-b$ selects $\delta=1$,
+and $z=D_s$ selects the cyclic formula.  This includes every boundary
+position without a continuity assumption.  The proposed full word
+therefore satisfies the initialized recurrence at every $n\ge0$.
+Uniqueness gives \eqref{eq:upper-full-word}.
+\end{proof}
+
+\begin{proof}[Earliest preperiod]
+We compare the full sequence with the cyclic continuation $C$.
+For a residual coordinate $e$, the tower immediately preceding its
+current tower is $X_s$ exactly when $e<b$, and is $Y_s$ otherwise.
+Indeed its previous residual coordinate is $e-b\bmod d$, which lies
+in the long-tower interval $[d-b,d)$ exactly in the first case.
+
+The maximal lengths of backward agreement between those preceding
+towers and $\rho^\infty$ are
+\begin{equation}\label{eq:upper-suffix-lengths}
+\begin{array}{c|cc}
+s&X_s&Y_s\\\hline
+0&16&8\\
+1&8&8\\
+2&8m-16&8m
+\end{array}
+\end{equation}
+To verify this table, the last eight digits of $\beta^2$ equal $\rho$.
+The preceding ninth digit is $1$, while the corresponding backward
+digit of $\rho^\infty$ is $2$.  Append the final $\rho$ powers of
+$X_s,Y_s$, whose exponents are respectively $(1,0)$, $(0,0)$, and
+$(m-3,m-1)$.  This proves both each agreement length and its first
+mismatch.  The phase agrees with the final front phase because
+$D_s\equiv4\pmod8$.
+
+For $s=0$, let $A=26m+13$, so $q=Aa+kd$.  Every column is final by
+row $A-1$.  At row $A$, positions at or after $q$ have $j=k$ and $e<b$;
+their distance $\ell=D_s-(y-6j)$ before the cut is $15$, within the
+$X_s$ agreement length $16$.  In later rows, columns $j\le k-1$ have
+$\ell\le8$, while column $k$ retains its longer $X_s$ agreement.
+At $q-1$ the coordinates are $(y,j,e)=(A,k-1,d-1)$.  Its preceding
+tower is $Y_s$ and $\ell=9$, so $G(q-1)=2\ne1=C(q-1)$.
+
+For $s=2$, let $A=26m+40$, so $q=Aa$.  Again all columns are final
+by row $A-1$.  In row $A$, column $k$ has $e<b$ and
+$\ell=8m-16$, exactly the $X_s$ bound.  Every smaller column has
+$\ell\le8m-22$, below both bounds.  These distances decrease in
+subsequent rows.  At $q-1$ the coordinates are $(A-1,k,b-1)$ and
+$\ell=8m-15$, the first mismatch of $X_s$, again $2$ versus $1$.
+
+For $s=1$, put $A=26m-1$, so $q=Aa+(k-2)d$.  Three columns need a
+short additional check because they have not all reached their final
+front phase.  Write $j=k-t$, $t=0,1,2$.  In row $A$, their distances
+before the cut are $27-6t$, and
+$Q(j)=D_s+6j-8$.  Thus all required comparisons are precisely
+\begin{equation}\label{eq:upper-63}
+ F^+_{k-t}\bigl(Q(k-t)+8-\ell\bigr)
+       =\beta[(-\ell)\bmod5],
+ \qquad 1\le\ell\le27-6t,\quad t=0,1,2.
+\end{equation}
+There are $63$ identities.  Their front residues are $1,0,2$,
+respectively, and their values use only the fixed suffix $K_r$,
+a bounded suffix of $M_r^{2h}$, and the first eight digits of $\rho$.
+Both preceding tower types have the identical suffix
+$\beta^{2m+3}$, longer than $27$ digits.  Direct verification of
+\eqref{eq:upper-63} therefore applies for every admissible $m$.
+All columns $j\le k-3$ are already final in row $A$.  Column $k-3$
+has distance $9$ in that row, entirely before $q$, and distance at
+most $8$ later.  Earlier columns have distance at most $3$ already
+in row $A$.  At $q-1$, the coordinates are $(A,k-3,d-1)$ and the
+distance is $9$, giving the same $2$ versus $1$ mismatch for either
+preceding tower type.
+
+The certificate \path{upper_minimality.py} verifies the $63$
+identities and the fixed suffix and mismatch identities, $76$ symbol
+checks in total.  The arguments just given prove $G(n)=C(n)$ for
+every $n\ge q$ and $G(q-1)\ne C(q-1)$.  Since $C$ has least period
+$P$, no eventual period can start earlier: every eventual period is
+a multiple of $P$ and has the same bi-infinite continuation.  This
+proves \eqref{eq:upper-q} and completes the theorem.
+\end{proof}
+
+\subsection{The integer seam \texorpdfstring{$d=1$}{d=1}}
+
+The open-case preperiod formulas must not be specialized merely by
+substituting $b=0$.  The following separate word construction gives
+both the full seam sequence and its exact earlier preperiod.
+
+\begin{theorem}[Upper integer seam]\label{thm:upper-seam}
+Let $c=5a+1$ and $a\ge10$.  Write $a=3m+s$, $0\le s<3$, and
+put $P=6a+1$.  Define $E_s,\Gamma_s,N_s$ by
+\[
+\begin{array}{c|c|c|l}
+s&E_s&\Gamma_s&N_s\\\hline
+0&8m+20&10m-27&\rho^{m-3}\beta^{2m+5}\\
+1&8m+12&10m-13&\rho^{m-1}\beta^{2m+3}\\
+2&8m+12&10m-7&\rho^{m-1}\alpha\alpha\beta^{2m+3}.
+\end{array}
+\]
+For $n=ay+x$ with $0\le x<a$, the full sequence is
+\begin{equation}\label{eq:upper-seam-full}
+ G(n)=
+ \begin{cases}
+ F_x^+(y),&y-6x<E_s,\\
+ N_s[(y-6x+\Gamma_s)\bmod P],&y-6x\ge E_s.
+ \end{cases}
+\end{equation}
+Its least period is $P$, and its earliest preperiod is
+\begin{equation}\label{eq:upper-seam-q}
+ q=
+ \begin{cases}
+ (26a^2+42a)/3,&s=0,\\
+ (26a^2-26a)/3-2,&s=1,\\
+ (26a^2-52a)/3-3,&s=2.
+ \end{cases}
+\end{equation}
+\end{theorem}
+\begin{proof}
+All displayed exponents are nonnegative: $m\ge4$ for $s=0$, and
+$m\ge3$ otherwise.  The cyclic formula follows from
+Lemma~\ref{lem:tokens} and $a^{-1}\equiv-6\pmod P$.
+For $s=0,1$, the token necklace has a unique maximal $\beta$ run
+longer than one; for $s=2$ it has a unique $\alpha\alpha$ adjacency.
+These signatures prove token primitivity.  As before, the digit $2$
+marks token endpoints, and multiplication by $a^{-1}$ preserves
+primitivity.  Thus its least physical period is $P$.
+
+We give the full finite reductions for the initialized recurrence.
+The half-strip identity is Lemma~\ref{lem:upper-front}.  For the
+ordinary cut interfaces $x>0$, write $x=3h+r$, $u=m-h$ and
+$y=6x+E_s+\delta$.  The front index relative to the start of its
+final $\rho$ portion is
+\[
+ 8u+6r+e_s+\delta-Q_r,
+ \qquad (e_0,e_1,e_2)=(20,12,12).
+\]
+For the required offsets this lies in $K_r$ or the final $\rho$.
+The admissibility condition $x<a$ is $3u+s-r\ge1$.  When $u\ge3$
+all needed values are in $\rho$, and increasing $u$ adds $8$ to
+their indices.  Therefore $u=0,1,2,3$, subject to admissibility,
+covers every column.  Only cut offsets $\delta=-1,0,1,2,3$ can mix
+the formulas.  Since $E_s+\Gamma_s=P-8$, every needed cyclic value
+there is $\beta[(-8+\delta)\bmod5]$.  The corresponding finite mex
+identities, including the preceding-column residue change, comprise
+$150$ checks.
+
+At $x=0$, the $c$ option is column $a-1$ at height $y-6$ and is
+available exactly when $y\ge6$.  All operands are cyclic for
+$y\ge E_s+6a$.  Below this horizon, the spliced zeroth column is
+the indicated prefix of
+\[
+ Z_s=
+ \begin{cases}
+ K_0\rho^{2m-1}\beta^{2m+5},&s=0,\\
+ K_0\rho^{2m}\beta^{2m+3},&s=1,\\
+ K_0\rho^{2m}\alpha\alpha\beta^{2m+3},&s=2.
+ \end{cases}
+\]
+Its length is $E_s+6a+9$.  The third option throughout the required
+range remains in $F^+_{a-1}$.  Hence the exact residual assertion is
+\[
+ Z_s(y)=\mex\bigl(
+ \{Z_s(y-1):y\ge1\}\cup\{Z_s(y-4):y\ge4\}
+ \cup\{F^+_{a-1}(y-6):y\ge6\}\bigr),
+ \qquad 0\le y<E_s+6a.
+\]
+The horizon equals $26m+(20,18,24)_s$.  Its macrosegment endpoints
+have even slopes and periods dividing $40$.  The certificate checks
+that their order is stable for $m\ge20$, growing cells have length
+at least $40$ at $m=20$, and discarded endpoints stay outside the
+interval.  Lemma~\ref{lem:macro40} reduces all larger $m$ to
+$20,\ldots,39$; the smaller admissible $m$ are checked directly.
+There are $23\,082$ verified wrap positions.  Together with the
+$150$ ordinary-interface checks, this proves the full recurrence
+and hence \eqref{eq:upper-seam-full}.
+
+For the earliest preperiod, define
+\[
+ \begin{array}{c|c|c}
+ s&Y&q\\\hline
+ 0&E_s+6(a-1)&aY\\
+ 1&E_s+6(a-3)&aY-2\\
+ 2&E_s+6(a-4)&aY-3.
+ \end{array}
+\]
+These expressions simplify to \eqref{eq:upper-seam-q}.
+At $q-1$, the coordinates $(y,x)$ are respectively
+$(Y-1,a-1)$, $(Y-1,a-3)$, $(Y-1,a-4)$, so each has cut coordinate
+$y-6x=E_s-1$.  The front symbol is $2$ and the cyclic symbol is $1$.
+For $s=0$, every position at or after $q$ is already on the cyclic
+side.  For $s=1,2$, only the last two or three columns, respectively,
+can remain on the front side.  In order from left to right, their
+front residues are $2,0,1$ and their remaining negative offsets
+from the cut are respectively $[-7,-1],[-13,-1],[-19,-1]$, using
+only the first two intervals for $s=1$.  The same offsets are their
+indices relative to their final $\rho$ onset.  Reading $K_r$ and,
+where necessary, the final part of $M_r^{2h}$ verifies that all these
+symbols equal $\beta[(-8+\delta)\bmod5]$.  The $59$ agreement
+identities and the three last mismatches give $62$ finite checks.
+They cover every position at or after $q$ still before the chosen
+cut.  Thus the period starts exactly at the asserted $q$.
+
+All the half-strip, interface, wrap, and preperiod checks in this
+proof are implemented in the standalone certificate
+\path{upper_splice_certificate.py}.  Its exact counts are
+$30\,520$, $150$, $23\,082$, and $62$, respectively.  The finite
+parameter reductions above, rather than a sampled range of games,
+justify their unbounded scope.
+\end{proof}
+
+
+\section{The unbounded region below \texorpdfstring{$5a$}{5a}}
+\label{sec:lower-unbounded}\label{sec:lower-uniform}
+
+Write $c=5a-d$. The following construction completes the part with
+$a/d\ge41$; it also gives a separate direct treatment of the integer-ratio
+seams $d=1$. Throughout this section use the fixed words
+$\alpha,\beta,\rho,\omega$ from Lemma~\ref{lem:tokens}.
+All powers below are ordinary word powers, and a cyclic word is indexed
+from zero. The displayed formulas specify every term, including the
+transient, without a mex iteration or repeated-state search.
+
+\subsection{An exact half-strip identity}
+\begin{lemma}[Lower half-strip]\label{lem:lower-halfstrip}
+For $j,y\ge0$, define the infinite column words
+\begin{align}
+ F^-_{3h}&=\omega^{2h}\beta^{2h}01\rho^\infty,\notag\\
+ F^-_{3h+1}&=\omega^{2h+1}013\beta^{2h+1}\rho^\infty,\label{eq:lower-columns}\\
+ F^-_{3h+2}&=\omega^{2h+1}0101232\beta^{2h+1}01\rho^\infty.\notag
+\end{align}
+For $j\ge1$ they satisfy
+\[
+ F^-_j(y)=\mex\{F^-_j(y-1),F^-_j(y-4),F^-_{j-1}(y-5)\},
+\]
+with negative arguments omitted. For $j=0$ replace the third option by
+$\omega[(y-4)\bmod8]$, available precisely when $y\ge4$.
+The respective displayed finite-prefix lengths are
+\[
+ Q_{3h}=26h+2,\qquad Q_{3h+1}=26h+16,\qquad Q_{3h+2}=26h+22.
+\]
+Beyond $Q_j$ the final phase is
+\begin{equation}\label{eq:lower-final-phase}
+ F^-_j(y)=\rho[(y-6j-2)\bmod8].
+\end{equation}
+\end{lemma}
+\begin{proof}
+For each residue of $j$ substitute the three words in the recurrence.
+For $j>0$, after $y\ge Q_j+4$ all delayed operands have entered their
+final period-eight segments; their common $\rho$ phases then satisfy
+Lemma~\ref{lem:tokens} identically. In the finite remaining
+identity, endpoints have slopes $0,16,26$ in $h$; include the current
+endpoints shifted by $0,1,4$, the preceding-column endpoints shifted by
+$5$, and the horizon $Q_j+8$. Split the literals into individual letters.
+The exact intercept bounds and thresholds in Lemma~\ref{lem:macro40} are
+\[
+\begin{array}{c|c|c|c}
+ j\bmod3&[u,v]&g&K\\\hline
+ 0&[-3,10]&10&6\\
+ 1&[0,24]&10&7\\
+ 2&[0,30]&10&7
+\end{array}
+\]
+The checker \path{halfstrip_certificate.py} verifies $0\le h<K+20$,
+omitting the nonexistent preceding column when $j=0$, and handles that
+boundary by the stated $\omega$ option. For this exceptional boundary
+the operands are all periodic from $y=6$, and the checker includes
+$y=0,\ldots,13$, covering all eight periodic phases $y=6,\ldots,13$.
+All $28\,424$ integer obligations pass. The macrosegment lemma proves
+the identities for every $h$.
+Finally $Q_j\equiv6j+2\pmod8$, giving the phase formula.
+\end{proof}
+
+\subsection{The full lower open-cone word and its least period}
+\begin{theorem}[Lower open cones]\label{thm:lower-open}
+Let
+\[
+ a=kd+b,\quad 0<b<d,\quad \gcd(b,d)=1,\quad
+ k\ge41,\quad k=3m+s,\quad s\in\{0,1,2\},
+\]
+and put $c=5a-d$, $P=6a-d$. Define the tower words and cut by
+\begin{equation}\label{eq:lower-towers}
+\begin{array}{c|c|c|c}
+ s&X&Y&D_s\\\hline
+ 0&\rho^{m-1}\beta^{2m+1}\rho&\rho^{m-2}\beta^{2m+3}&8m+18\\
+ 1&\rho^m\alpha\alpha\beta^{2m+1}&\rho^m\beta^{2m+1}&8m+10\\
+ 2&\alpha\beta^{2m+6}\rho^{m-2}&\alpha\alpha\beta^{2m+1}\rho^m&16m+10
+\end{array}
+\end{equation}
+For $0\le t<d$, concatenate $X$ if
+$\lfloor(t+1)b/d\rfloor-\lfloor tb/d\rfloor=1$ and $Y$ otherwise;
+call the resulting digit word $T^-$. It has length $P$.
+Let $v$ be the inverse of $a$ modulo $P$. For every $n\ge0$ write uniquely
+\begin{equation}\label{eq:lower-coordinates}
+ n=ay+(a-1-i),\qquad 0\le i<a,\qquad i=dj+e,\quad 0\le e<d,
+ \qquad z=y-6j.
+\end{equation}
+Then the complete Sprague--Grundy sequence is
+\begin{equation}\label{eq:lower-open-word}
+ G(n)=
+ \begin{cases}
+ F^-_j(y),&z<D_s,\\
+ T^-[(y-vi-D_s)\bmod P],&z\ge D_s.
+ \end{cases}
+\end{equation}
+Its least eventual period is $p=P$, and its earliest preperiod is
+\begin{equation}\label{eq:lower-open-q}
+ q=
+ \begin{cases}
+ (26m+3)a+d,&s=0,\\
+ (26m-10)a-(3m-2)d,&s=1,\\
+ (26m+30)a-(3m+2)d,&s=2.
+ \end{cases}
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Proof of the full word and least period]
+The tower lengths are $|X|=6k+5$, $|Y|=6k-1$, whence
+$|T^-|=(6k-1)d+6b=P$. By Lemma~\ref{lem:tokens} the cyclic function
+\[
+ C(n)=T^-[(v(n+1-a)-D_s)\bmod P]
+\]
+satisfies the stationary recurrence. This is the same cyclic expression
+as in \eqref{eq:lower-open-word}.
+
+To fix its phase relative to every column, let $L_t$ be the digit length
+of the first $t$ towers and put $e=tb\bmod d$. Then
+\[
+ L_t=(6k-1)t+6\lfloor tb/d\rfloor=\frac{Pt-6e}{d},\qquad
+ aL_t+e=P\frac{at-e}{d}.
+\]
+The last quotient is an integer since $a\equiv b\pmod d$.
+Thus $L_t\equiv-ve\pmod P$, with no cancellation of $d$ modulo $P$.
+At $z=D_s$, the residual coordinate $e$ starts exactly at its tower.
+Its type is $X$ if $e+b\ge d$ and $Y$ otherwise. Writing
+\[
+ \delta=\left\lfloor\frac{e+b}{d}\right\rfloor,\qquad
+ e'=e+b-d\delta,\qquad L_\delta=6k-1+6\delta,
+\]
+the next tower has residual coordinate $e'$ and the current tower has
+length $L_\delta$. Coprimality makes these residual coordinates one
+cycle, so the towers cover all $P$ positions.
+
+For $j\ge1$, the three options have coordinates
+$(j,y-1,e)$, $(j,y-4,e)$ and $(j-1,y-5,e)$.
+Their $z$ coordinates are $z-1,z-4,z+1$. Away from the cut, the
+recurrence follows from either Lemma~\ref{lem:lower-halfstrip} or the
+stationary identity; only $z=D_s-1,\ldots,D_s+3$ mix the formulas.
+The displayed final-phase onsets, measured in $z$, are $8h+2,8h+10,8h+10$.
+For $s=0,2$ every column $j\le k$ is final by $D_s-4$; for $s=1$ this
+holds for $j\le k-1$. The remaining partial column $j=k=3m+1$ starts
+its displayed final phase at $D_s$, but its preceding four symbols are
+$1012$, the last four symbols of both $\beta$ and $\rho$.
+Thus this column also agrees with the backward final phase on the four
+needed positions. Every tower starts with $0120$ and ends with $\rho$,
+and $D_s\equiv2\pmod8$. These eight symbols settle every mixed interior
+identity exactly.
+
+At $j=0$, the $c$ option is available at $y\ge4$ and wraps to
+\[
+ (j',y',e')=(k-1+\delta,y-4,e+b-d\delta),\qquad
+ z'=y-(L_\delta-1).
+\]
+For $y\ge D_s+L_\delta-1$ all operands are stationary. Earlier, define
+$S=F^-_0[0:D_s]V$, where $V=Y$ or $X$ according as $\delta=0$ or $1$.
+The remaining exact identity is, for $0\le y<|S|-1$,
+\begin{equation}\label{eq:lower-wrap-obligation}
+ S(y)=\mex\bigl(\{S(y-1):y\ge1\}\cup
+ \{S(y-4),F^-_{k-1+\delta}(y-4):y\ge4\}\bigr).
+\end{equation}
+There are six one-parameter families, independent of $b,d$.
+The initial part is $01\rho^{m+2}$, $01\rho^{m+1}$, or
+$01\rho^{2m+1}$. All variable segments have periods five or eight;
+fixed literals are split into letters. Include endpoints shifted by
+$0,1,4$ for $S$, by $4$ for the predecessor column, and the horizon
+$|S|-1$. Every slope is even. The exact bounds are
+\[
+\begin{array}{c|c|c|c|c|r}
+s&\delta&[u,v]&g&K&\text{positions}\\\hline
+0&0&[-4,80]&8&16&14720\\
+0&1&[0,86]&8&16&14858\\
+1&0&[0,86]&8&16&14674\\
+1&1&[0,100]&8&18&16750\\
+2&0&[0,100]&8&18&21750\\
+2&1&[0,106]&8&19&23218
+\end{array}
+\]
+The checker \path{lower_open_boundary_uniform.py} verifies all
+$13\le m<K+20$, checks the affine input-length inequality for all
+$m\ge13$, and passes all $105\,970$ obligations. Since
+$gK-(v-u)\ge40$, Lemma~\ref{lem:macro40} proves
+\eqref{eq:lower-wrap-obligation} for unbounded $m$.
+This establishes the full initial-boundary recurrence, hence the
+candidate is $G$ by uniqueness. The move $c$ is available at $y\ge5$
+in an interior column and at $y\ge4$ in the boundary column, exactly as
+used above. At $e=d-b$ use $X$; at $z=D_s$ use the cyclic expression.
+
+For least period, each tower has exactly one maximal $\beta$ cluster of
+length greater than one. The pairs of lengths for $X,Y$ are
+$(2m+2,2m+4)$, $(2m+1,2m+2)$, $(2m+6,2m+1)$ in the three cases.
+Every tower starts with $\alpha$ and ends with $\beta$, so these clusters
+remain maximal across tower boundaries. There are $b$ markers of one
+type and $d-b$ of the other. If the token necklace were an $r$-fold power,
+$r$ would divide both counts, forcing $r=1$. Unique parsing at the digit
+$2$ gives a primitive digit necklace. Multiplication by the invertible
+$v$ transfers any physical period to a necklace translation. Thus the
+least eventual period is $P$.
+\end{proof}
+
+\subsection{Why the open-cone preperiod is earliest}
+\begin{proof}[Proof of \eqref{eq:lower-open-q}]
+It suffices to prove agreement with the cyclic continuation $C(n)$ for
+all $n\ge q$ and disagreement at $q-1$. The preceding tower for residual
+$e$ is $X$ precisely when $e<b$, and $Y$ otherwise.
+A sufficiently long $\beta$ power agrees with the backward periodic
+$\rho$ word for exactly eight symbols; at the ninth it is $1$ whereas
+the periodic $\rho$ value is $2$. Appending $\rho^t$ increases this
+agreement length by $8t$. The maximum backward suffix lengths are
+\[
+\begin{array}{c|cc}
+ s&\text{previous }X&\text{previous }Y\\\hline
+ 0&16&8\\
+ 1&8&8\\
+ 2&8m-8&8m+8
+\end{array}
+\]
+They compare the cyclic continuation to the final phase
+\eqref{eq:lower-final-phase}, since every $D_s$ is $2$ modulo eight.
+Write $\ell=D_s-z$ for distance before the cut.
+
+If $s=0$, put $y_0=26m+3$, so $q=y_0a+d$.
+All columns are final by this row. In row $y_0$, positions at or after
+$q$ have $i\le a-d-1$: columns $j\le k-2$ have $\ell\le3$, while
+the remaining part of column $k-1$ has $e<b$ and $\ell=9$, within its
+$X$ suffix. In the next row, column $k$ has $e<b$ and $\ell=14$;
+column $k-1$ has $\ell=8$ and earlier columns have smaller distances.
+These distances only decrease. At $q-1$, however,
+$(y,j,e)=(y_0,k-1,b)$, so the previous tower is $Y$ and $\ell=9$:
+the front is $2$ and the continuation is $1$.
+
+If $s=2$, put $y_0=26m+29$, so $q=y_0a+b$.
+All columns are final. In this row positions at or after $q$ have
+$j\le k-1$ and $\ell\le8m-13$, inside both suffix bounds.
+In the next row the last column has $e<b$ and $\ell=8m-8$, exactly
+its $X$ bound; all other distances are smaller and then decrease.
+At $q-1$, $(y,j,e)=(y_0,k,0)$ has preceding type $X$ and
+$\ell=8m-7$, giving the first earlier mismatch $2$ versus $1$.
+
+Finally suppose $s=1$ and put $y_0=26m-11$; then
+$q=y_0a+(3d+b)$. The positions at or after $q$ in that row have
+$j\le k-4$, are final, and have $\ell\le3$.
+From row $y_0+1$, the four last columns $j=k-h$, $h=0,1,2,3$, have
+maximum distances $26,20,14,8$ respectively.
+For $h=3$ the column is already final. For $h=0$ its offset from the
+final-phase onset is $-\ell$, wholly inside its final $\beta$ power;
+both tower types end in the same sufficiently long $\beta$ power.
+For $h=1,2$, the offset is $8-\ell$ and the front prefix ends in
+$\beta^{\text{positive power}}01$. The fixed identities
+\[
+ F^-_{k-h}(Q_{k-h}+8-\ell)=\beta[-\ell\bmod5],\qquad
+ \begin{cases}1\le\ell\le20,&h=1,\\1\le\ell\le14,&h=2,
+ \end{cases}
+\]
+follow by reading $\rho$ at nonnegative offsets, the final $01$ at
+offsets $-2,-1$, and the $\beta$ power earlier. Their $34$ symbols are
+checked explicitly by \path{lower_open_minimality.py}; the powers
+are longer than required for every $m\ge13$.
+Thus every later position agrees with the continuation.
+At $q-1$ one has $(y,j,e)=(y_0,k-3,0)$ and $\ell=9$.
+The front is the last $2$ of its $\beta$ power, one symbol before
+its final-phase onset, while the continuation is
+$\beta[-9\bmod5]=1$.
+The checker passes $44$ fixed-word obligations in total.
+These exact last mismatches prove all three earliest preperiods.
+\end{proof}
+
+\subsection{The integer-ratio lower seams}
+The preceding tower construction also has a well-defined $b=0,d=1$
+specialization, but its minimal preperiod cannot be inferred by treating
+an empty residual class as nonempty. The following direct construction
+proves both its full word and the exact seam preperiod.
+
+\begin{theorem}[Lower seams]\label{thm:lower-seam}
+Let $a=3h+s$, $h\ge3$, $s\in\{0,1,2\}$, and $c=5a-1$.
+Set $P=6a-1$ and define
+\begin{equation}\label{eq:lower-seam-data}
+\begin{array}{c|c|c|c}
+s&D&N&\lambda\\\hline
+0&16h+4&\rho^{h-2}\beta^{2h+3}&10h-19\\
+1&16h+12&\rho^h\beta^{2h+1}&10h-5\\
+2&16h+15&\rho^h\alpha\alpha\beta^{2h+1}&10h+1
+\end{array}
+\end{equation}
+Each $N$ has length $P$. For $n=ay+(a-1-j)$, $0\le j<a$, put
+$z=y-6j$. Then
+\[
+ G(n)=\begin{cases}
+ F^-_j(y),&z<D,\\
+ N[(z+\lambda)\bmod P],&z\ge D.
+ \end{cases}
+\]
+The least eventual period is $p=P$, and the earliest preperiod is
+\begin{equation}\label{eq:lower-seam-q}
+q=\begin{cases}
+ (26a^2+9a)/3+1,&s=0,\\
+ (26a^2-59a)/3+3,&s=1,\\
+ (26a^2-85a)/3+4,&s=2.
+\end{cases}
+\end{equation}
+\end{theorem}
+\begin{proof}
+Put $w(z)=N[(z+\lambda)\bmod P]$. Lemma~\ref{lem:tokens} gives its
+stationary recurrence. For every $j<a$ the half-strip final phase begins
+by $z=8h+10$, and $D-4\ge8h+10$ for $h\ge3$.
+Thus the only interior joins are $z=D-1,\ldots,D+3$, where the two
+explicit words can be compared directly. The position $D+\lambda$
+modulo $P$ is $8h-14,8h+2,8h+5$ in the three cases, a fixed distance
+from the indicated token interfaces; the five identities are included
+in the exact certificate below.
+
+The boundary $j=0$ wraps to $(a-1,y-4)$. Define
+\[
+ g_0(y)=\begin{cases}F^-_0(y),&y<D,\\w(y),&y\ge D,\end{cases}
+ \quad
+ E(y)=\begin{cases}F^-_{a-1}(y),&y-6(a-1)<D,\\
+ w(y-6(a-1)),&y-6(a-1)\ge D.\end{cases}
+\]
+The remaining identity is
+$g_0(y)=\mex\{g_0(y-1),g_0(y-4),E(y-4)\}$, with negative
+arguments omitted. Beyond $D+P-1$ all operands are cyclic.
+The checker \path{lower_seam_uniform_certificate.py} verifies this
+identity, the five joins, and the last boundary mismatches below by
+Lemma~\ref{lem:macro40}. It uses cycle indices $-2,\ldots,5$ when
+expanding $w$; affine inequalities at $h=3$, with nonnegative slopes,
+prove that these cycles cover all relevant arguments for every $h\ge3$.
+The exact intercept bounds and thresholds are
+\[
+\begin{array}{c|c|c|c}
+s&[u,v]&g&K\\\hline
+0&[-8,25]&2&37\\
+1&[-10,39]&2&45\\
+2&[-28,75]&2&72
+\end{array}
+\]
+All slopes are even, all periods divide $40$, and the checker verifies
+$3\le h<K+20$. This proves the boundary recurrence for unbounded $h$;
+together with the half-strip theorem and the joins, it proves the full
+sequence by uniqueness.
+
+For $s=0,1$ the token necklace has a unique long cluster of $\beta$
+tokens, while for $s=2$ it has a unique consecutive pair $\alpha\alpha$.
+Each forces primitivity, using unique token parsing.
+Since $az\equiv n+1-a\pmod P$ and $\gcd(a,P)=1$, physical periods
+correspond to necklace translations. Hence $P$ is least.
+
+For exact $q$, adding $P$ to an interior heap sends
+$(j,y)$ to $(j+1,y+6)$ and preserves $z$. The exact last mismatch in
+two consecutive half-strip columns is
+\begin{equation}\label{eq:lower-interior-last}
+\max\{y:F^-_{3t+r}(y)\ne F^-_{3t+r+1}(y+6)\}
+=\begin{cases}
+16t+4,&r=0,\\26t+15,&r=1,\\16t+13,&r=2.
+\end{cases}
+\end{equation}
+This is proved by the same macrosegment reduction with intercept ranges
+$[-6,24],[-6,30],[-6,36]$, minimum slope gap $10$, thresholds $7,8,9$,
+and $t\bmod20$. Beyond the finite-prefix horizon both columns have
+the same final phase. All the listed last mismatches lie before the
+chosen seam cut, so the splice retains them.
+For the final column, the same boundary certificate gives
+\[
+ \max\{y:E(y)\ne g_0(y+5)\}
+ =26h+3,\quad16h-1,\quad16h+10
+\]
+in residues $s=0,1,2$, respectively. The finite horizon is $D+P+10$;
+beyond it both entries belong to the same cyclic continuation.
+There are $304\,624$ exact obligations across the three boundary
+families and three interior last-mismatch families, all passed.
+
+The largest interior candidate comes from $j=3h-2$.
+The boundary candidate dominates when $s=0$, and the interior candidate
+dominates when $s=1,2$. Converting the last mismatching heap to its index
+plus one gives
+\[
+ (26h+3)a+1,\qquad (26h-11)a+3,\qquad (26h-11)a+4,
+\]
+which are exactly \eqref{eq:lower-seam-q}. This proves earliest
+preperiod as well as least period.
+\end{proof}
+
+The unbounded proofs above have also been checked against complete
+candidate sequences independently: $54$ open-cone games, including
+$k=121$ and both extreme residual choices $b=1,d-1$, passed
+$11\,229\,686$ individual mex and period comparisons; lower seams
+$10\le a\le80$ passed $2\,002\,430$. These computations are
+supplementary checks. The all-parameter conclusions follow from the
+word identities, modular tower coordinates, suffix arguments, and
+uniform macrosegment reductions proved above.
+
+
+\section{Complete classification when \texorpdfstring{$a=2$}{a=2}}
+For this section only put $B_2=0011001122$ and $E=0011021021$.
+\begin{theorem}\label{thm:a2}
+Let $c>8$ be odd and write $c=10k+t$, $t\in\{1,3,5,7,9\}$. Then $G=AW\per$ with the following words:
+\begin{center}\small
+\begin{tabular}{c|l|l}\toprule
+$t$&$A$&$W$\\\midrule
+1&$B_2^k\,031203102103$&$1E^k02$\\
+3&$B_2^{k-1}\,001100112$&$20011$\\
+5&$B_2^k\,00110210213$&$0210210011$\\
+7&$B_2^{k+1}\,03$&$12001$\\
+9&$B_2^{k+1}\,30213001123$&$B_2^k\,00112001122$\\\bottomrule
+\end{tabular}
+\end{center}
+Here $k\ge1$ except in row $9$, where $k\ge0$. The least periods and preperiods are
+\[
+\begin{array}{c|ccccc}
+t&1&3&5&7&9\\\hline
+p&c+2&5&10&5&c+2\\
+q&c+11&c-4&c+6&c+5&c+12.
+\end{array}
+\]
+\end{theorem}
+The recurrence proof below is an exact computer-assisted proof with an all-parameter reduction. Its finite checks are separate from the survey and do not depend on guessed state repetition.
+
+\begin{proof}[Recurrence proof]
+By Lemma~\ref{lem:certificate}, it suffices to check $F_k$, the first $T_k=q+c+p$ letters. The finite words are
+\begin{align*}
+t=1:\quad &B_2^k\,031203102103\,1E^k021E^k,&T_k&=30k+16;\\
+t=3:\quad &B_2^{k-1}\,001100112\,(20011)^{2k+1}200,&T_k&=20k+7;\\
+t=5:\quad &B_2^k\,00110210213\,(0210210011)^{k+1}02102,&T_k&=20k+26;\\
+t=7:\quad &B_2^{k+1}\,03\,(12001)^{2k+2}12,&T_k&=20k+24;\\
+t=9:\quad &B_2^{k+1}\,30213001123\,B_2^k00112001122\,B_2^k001120011,
+&T_k&=30k+41.
+\end{align*}
+These expressions are obtained by truncation of the stated $AW\per$, not by running the recurrence.
+
+Regard each variable repeated word as one segment of internal period $5$ or $10$, and split every fixed literal into one-letter segments. Every segment boundary has form $\alpha k+\beta$ with $10\mid\alpha$. Adjoin boundaries shifted by $0,2,8,c=10k+t$, and include $0,T_k$. For each row, the least and greatest intercepts among all these boundaries are
+\[
+\begin{array}{c|rrrrr}
+t&1&3&5&7&9\\\hline
+\min\beta&0&-10&0&0&0\\
+\max\beta&24&15&34&32&50.
+\end{array}
+\]
+These bounds follow by summing the displayed segment lengths; the short certificate in Appendix~\ref{app:checker} checks them independently.
+
+For $k\ge7$, two boundaries of different slopes are ordered by their slopes, since their distance in that order is at least $10k-60\ge10$. Boundaries of equal slope have fixed order and distance. Hence the ordered partition of $\half0{T_k}$ has the same interval types for every $k\ge7$. On each such interval, every argument $n,n-2,n-8,n-c$ lies in a fixed segment or is negative. Its symbol depends only on $n\bmod10$: the segment periods divide $10$ and their starting points change by multiples of $10$. Availability of moves is included because the shifted boundary at zero gives $2,8,c$.
+
+An interval between equal-slope endpoints is translated by a multiple of ten without changing its length. An interval between distinct-slope endpoints already has length at least ten at $k=7$, so already contains every residue modulo ten. Therefore every current-symbol and option-symbol tuple that can occur for any $k\ge7$ occurs at $k=7$. It suffices to check the admissible values $k\le7$.
+
+Those checks comprise respectively $952,609,742,728,1168$ positions, totaling $4199$. The complete possible option sets, grouped by the proposed current symbol, are shown in Table~\ref{tab:sets}. Every set in row $g$ has mex $g$. The file specified in Appendix~\ref{app:checker} is a complete executable verifier using only finite word expansion and integer operations; all its assertions were run successfully. The affine-boundary argument proves that these checks cover every $k$, and Lemma~\ref{lem:certificate} then covers every $n$.
+\begin{table}[ht]\centering\scriptsize
+\begin{tabular}{c|l|l|l}\toprule
+$g$&$t=1,9$&$t=3$&$t=5,7$\\\midrule
+0&$\varnothing,\{1\},\{1,2\},\{1,3\},\{1,2,3\}$&$\varnothing,\{1\},\{1,2\}$&$\varnothing,\{1\},\{1,2\},\{1,3\}$\\
+1&$\{0\},\{0,2\},\{0,3\},\{0,2,3\}$&$\{0\},\{0,2\}$&$\{0\},\{0,2\}$\\
+2&$\{0,1\},\{0,1,3\}$&$\{0,1\}$&$\{0,1\},\{0,1,3\}$\\
+3&$\{0,1,2\}$&---&$\{0,1,2\}$\\\bottomrule
+\end{tabular}
+\caption{Finite recurrence certificate for the all-$a=2$ theorem.}\label{tab:sets}
+\end{table}
+\end{proof}
+
+\begin{proof}[Least period and least preperiod]
+If $W$ is an $m$-fold power, $m$ divides the number of each symbol. For $t=1$ those counts are $(4k+1,4k+1,2k+1)$ and for $t=9$ they are $(4k+4,4k+4,2k+3)$. Their gcd is one in either case, so $W$ is primitive. For $t=3,7$ the nonconstant word has prime length five. For $t=5$ the counts $(4,4,2)$ allow only a square, but its halves $02102$ and $10011$ differ. Thus all stated periods are least.
+
+The last symbols of $A,W$ are respectively $(3,2),(2,1),(3,1),(3,1),(3,2)$ in the five rows. Thus $G(q-1)\ne G(q-1+p)$ in every case, proving the exact preperiod. All are positive.
+\end{proof}
+
+\section{Coverage and the global period theorem}\label{sec:coverage}
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+The $a=2$ theorem covers that entire slice. Otherwise $c>6a$ is covered by the five residue constructions. An admissible remaining pair has $4a<c<6a$ and $c\ne5a$. If $41|c-5a|\ge a$, it belongs to exactly one open atlas interval or one of its rational endpoints. The checker proves the ordered intervals tile both stated outer ranges, and coprimality makes each rational endpoint a single pair.
+
+In the remaining case put $d=|c-5a|$, so $0<41d<a$ and $\gcd(a,d)=1$. Euclidean division gives $a=kd+b$. If $b>0$, then $d>1$ and $k\ge41$, so the appropriate uniform open theorem applies. If $b=0$, coprimality forces $d=1$ and $a\ge42$, so the appropriate integer-seam theorem applies. These alternatives are exhaustive and the constructions give every symbol at every nonnegative heap size.
+
+Every displayed operation terminates. The atlas uses finitely many affine runs; the uniform construction uses $d$ finite tower words and one half-strip column formula. Expanding the prefix through the explicit $q-1$ and one block of length $p$ therefore gives a finite structural output. No recurrence search is needed to determine either stopping index.
+
+The large-$c$ and $a=2$ theorems give periods in the asserted set, including the reductions to $5$ forced by coprimality at their special equalities. The atlas period expressions and all rational-seam periods belong to $\{5,5a,c+a\}$. The uniform open and seam words have primitive period $c+a$. This proves the period restriction globally. In every case the separate last-mismatch argument gives the exact earliest $q$.
+\end{proof}
+
+\begin{corollary}[Universal non-pure-periodicity]\label{thm:nonpure}
+Every admissible game has $q>0$.
+\end{corollary}
+\begin{proof}
+If $q=0$, the proved least period is $5$, $5a$, $c+a$, or $c+4a$.
+The first divides $5a$; every alternative contradicts Theorem~\ref{thm:exclude}.
+\end{proof}
+This derivation uses the established full classification, rather than an assumed period conjecture. The earlier independent eleven-case pure-extension obstruction remains available in the supporting archive and was rerun, but is not needed as a premise of any word or period theorem here.
+
+\section{Examples and exceptional seams}
+For $(a,c)=(3,19)$, Theorem~\ref{thm:first} has $k=1,r=1$. Thus
+\[B=000111000111222,\quad X=0001112,\quad Y=00011122,\quad G=B(XY)\per.\]
+The displayed suffix begins at $15$, but the \emph{least} preperiod is $13$: the preceding two symbols already agree with the backwards periodic extension. The least period is $15$.
+
+For $(a,c)=(3,20)$ the same theorem has $k=1,r=2$, so
+\[X=00011122,\quad Y=0001112,\quad G=B(XYX)\per,\qquad(p,q)=(23,13).\]
+Changing $r$ across $a/2$ changes the period from $5a$ to $c+a$. Neither transition may be inferred solely from a repeated substring.
+
+For $(a,c)=(5,46)$, Theorem~\ref{thm:fourth} has $k=1,r=1$. Here
+\[D=3\,0^4\,2\,1^4\,3\,0^5\,1^5\,2^4\,3,\qquad
+W=B\,0^5\,1^5\,2\,0^5\,1^5\,2^5.\]
+The exact sequence is $B^2DW\per$, with $(p,q)=(51,76)$. The last transient symbol is $3$, and no $3$ occurs in the tail.
+
+
+The rational seams in the atlas illustrate a different phenomenon. For $c=5a+r$ and $t=r/a$ near $1/9$, both adjacent open cones have least period $c+a$. At the seam $(a,r)=(9,1)$, hence $(a,c)=(9,46)$, the least period is $5$. Similarly, at the lower seam $t=5/8$, the pair $(a,c)=(8,37)$ has $(p,q)=(5,393)$. These values are supplied by independent finite-word and complete-state certificates, not by evaluating an open-cone formula at its endpoint.
+
+For $(a,c)=(3,14)$, the exact pair is $(p,q)=(15,47)$. The formula of the $j=4$ large-$c$ theorem would incorrectly give $(17,32)$ if its condition $k\ge1$ were dropped. This failure explains the need for the separate affine-cone proof, even when a simpler formula extends correctly on part of a smaller interval.
+
+
+
+\subsection{A full central-strip example: \texorpdfstring{$(83,417)$}{(83,417)}}\label{sec:central-example}
+Here $c=5a+d$ with $d=2$, and $83=41\cdot2+1$ gives
+$k=41$, $b=1$, $m=13$, $s=2$. Thus $P=6a+d=500$ and $D_2=220$.
+The two towers in the printed formula are
+\[
+X=\alpha\beta^{34}\rho^{10},\quad |X|=253,\qquad
+Y=\alpha^2\beta^{29}\rho^{12},\quad |Y|=247.
+\]
+The mechanical increments for $i=0,1$ are $0,1$, so $T=YX$.
+Since $83\cdot247=20501=41\cdot500+1$, the modular inverse is $v=247$.
+The cyclic continuation at physical positions is therefore
+$C(n)=T((247n-220)\bmod500)$.
+The two tower starts are $L_0=0$, $L_1=247$, with residual coordinates
+$e_0=0$, $e_1=1$. The orbit check is concrete:
+$83L_1-e_1=20500=500\cdot41$.
+
+Divide $n=83y+x$, $0\le x<83$, and then $x=2j+e$,
+$e\in\{0,1\}$. At the last partial column $j=41$ only $e=0$ exists.
+The entire sequence is the explicit formula
+\[
+G(n)=\begin{cases}F^+_j(y),&y-6j<220,\\
+T((247n-220)\bmod500),&y-6j\ge220.
+\end{cases}
+\]
+Theorem~\ref{thm:upper-near} gives the least period $p=500$ and
+$q=(26\cdot13+40)83=31374$. The prefix is the first $31374$ symbols
+of this formula; its block is $W(t)=T((158+247t)\bmod500)$,
+$0\le t<500$, because $(247q-220)\bmod500=158$.
+This specifies both words completely without printing the long prefix.
+
+To see the last mismatch directly, $q-1=83\cdot377+82$ has
+$(j,e)=(41,0)$ and $z=377-246=131$. The distance behind the cut is
+$220-131=89$. Its preceding tower is $X$, whose backward agreement
+length is $8m-16=88$. The half-strip front is already in its final
+phase: $j=3\cdot13+2$ has onset $26\cdot13+32=370$, and hence
+$F^+_{41}(377)=\rho(7)=2$. In contrast,
+$C(q-1)=T(411)=1$; index $411$ is the last letter of the
+$\beta^{34}$ part of $X$. Thus $G(q-1)=2\ne1=G(q-1+p)$.
+The suffix argument in the theorem proves agreement for every $n\ge q$,
+including positions still described by the front branch; it does not
+assume that all columns have crossed the chosen cut at $q$.
+
+\begin{center}\small
+\begin{tabular}{rllcc}\toprule
+$n$&$(y,j,e)$&Formula branch&$G(n)$&$C(n)$\\\midrule
+0&$(0,0,0)$&front&0&0\\
+83&$(1,0,0)$&front&1&1\\
+332&$(4,0,0)$&front&2&2\\
+417&$(5,1,0)$&front&3&2\\
+18260&$(220,0,0)$&cyclic, exactly at cut&0&0\\
+31373&$(377,41,0)$&front, last mismatch&2&1\\
+31374&$(378,0,0)$&cyclic&2&2\\
+31873&$(384,0,1)$&cyclic&1&1\\
+31874&$(384,1,0)$&cyclic&2&2\\\bottomrule
+\end{tabular}
+\end{center}
+The companion \path{check_examples.py} verifies these entries, the tower
+words, the table record in Section~\ref{sec:record-example}, and the full
+initialized recurrence through $q+c+p$ for this example. Its finite
+comparison illustrates the theorem; the theorem's unbounded proof supplies
+the all-position conclusion.
+
+
+\section{Certificates and reproducibility}\label{sec:computation}
+The electronic appendix is part of the classification: it supplies the
+finite affine run lists, the rational-seam words, and executable checkers
+for all finite obligations in the proofs. The main evaluator selects a
+proved case and evaluates its words. It has no state-search fallback and
+returns the whole prefix of length $q$ and primitive block of length $p$
+for every admissible input.
+
+All mathematical computations use exact integers or Python's standard
+library rational arithmetic. The construction code, proof checkers, and
+independent initialized mex comparison are distinct. The checkers verify
+explicit candidate words and the hypotheses of the parameter-reduction
+lemmas; the discovery process is not a premise. The released source is
+ordinary executable mathematics, not a claim of formal verification in
+Lean or another proof assistant.
+
+The full-word evaluator was compared independently with the initialized
+recurrence on $38$ strategic inputs, totaling $5\,694\,978$ positions.
+These include both seams, every open quotient residue, remainders near
+both ends, and quotients up to $201$, beyond the finite atlas. Every
+symbol matched, and separate primitive-block and last-mismatch tests
+passed. A second lower-side implementation additionally checked $54$
+inputs through $11\,229\,686$ positions. These finite comparisons are
+corroboration; the unbounded theorems follow from the proved reductions.
+The atlas also has $178$ independent integer comparisons near its cone
+endpoints, totaling $15\,164\,928$ recurrence positions; the separate
+lower-seam implementation checks $71$ inputs and $2\,002\,430$ positions.
+All these comparisons are run by the release driver.
+The exact software-to-proof correspondence, including the two worked
+boundary reductions, is given in Appendix~\ref{app:proof-map}.
+
+\appendix
+\section{Executable proof inventory}\label{app:uniform}
+Run \path{python code/verify_all.py} from the extracted package, with
+assertions enabled (without \texttt{-O}). The program checks every required
+finite obligation and writes a release report. The following counts refer
+to distinct kinds of checks and should not be interpreted as a number of
+sampled parameter pairs.
+\begin{center}\small
+\begin{tabular}{p{.52\textwidth}r}\toprule
+Proof component & Executed obligations\\\midrule
+Outer affine atlas & $89$ cones; $350\,750$ cells\\
+Outer rational seams & $89$ words; $419\,798$ positions\\
+Large-range repetition reduction & $14\,829$ cells\\
+All-$a=2$ reduction & $4\,199$ positions\\
+Upper half-strip columns & $30\,520$ positions\\
+Upper open wrap identities & $114\,528$ positions\\
+Upper open exact-preperiod suffixes & $76$ symbols\\
+Upper integer-seam interfaces and wrap & $150+23\,082$ positions\\
+Upper integer-seam exact preperiod & $62$ symbols\\
+Lower half-strip columns & $28\,424$ positions\\
+Lower open wrap identities & $105\,970$ positions\\
+Lower open exact-preperiod suffixes & $44$ symbols\\
+Lower integer-seam wrap and mismatch reductions & $304\,624$ positions\\
+Independent token identity & $64$ local positions\\\bottomrule
+\end{tabular}
+\end{center}
+
+The files \path{certificates/atlas.json} and
+\path{certificates/seams.json} contain the electronic word tables.
+An atlas run $[v,[b,g]]$ means $v^{ba+gr}$, with $c=\mathrm{base}\,a+r$.
+Each row gives its open rational interval, affine $p,q$, and full prefix
+and period run lists. The independent \path{verify_atlas.py} checks
+positive lengths, total lengths, the sufficient recurrence horizon, all
+shifted endpoint orders, every mex cell, all possible circular-run
+symmetries including isolated rational coincidences, and the preceding
+symbol mismatch. The seam verifier checks full words, primitive periods,
+last mismatches, reduced-fraction association, uniqueness of identifiers
+and parameter pairs, and completeness of the endpoint inventory. Both the
+coverage verifier and the table-consuming evaluator use the same validated
+loader; seven negative checks reject deliberately corrupted inventories.
+
+The directory \texttt{code/near/} contains the uniform certificates:
+\begin{quote}\small\ttfamily
+upper\_splice\_certificate.py\\
+upper\_boundary\_uniform.py\\
+upper\_minimality.py\\
+halfstrip\_certificate.py\\
+lower\_seam\_uniform\_certificate.py\\
+lower\_open\_boundary\_uniform.py\\
+lower\_open\_minimality.py
+\end{quote}
+Their templates are precisely the words in the two central-strip sections.
+Each affine checker asserts its endpoint and phase hypotheses before
+performing the finite symbol comparisons. The two minimality checkers
+verify only fixed suffix identities; their unbounded justification is
+the explicit backward-suffix algebra in the main proofs.
+
+\section{Outer-range checks and evaluation}\label{app:checker}
+The file \path{uniform_certificate.py} proves the large-range
+repetition families by Lemma~\ref{lem:affine};
+\path{a2_certificate.py} verifies all $4\,199$ positions needed for
+the all-$a=2$ theorem; and \path{band4_tables.py} verifies the remaining
+finite symbolic transition tables. These components implement the printed reductions. The optional eleven-case
+\path{pure_obstruction_certificate.py} also passes, independently of
+the period classification, but is no longer needed for the short
+non-pure-periodicity corollary.
+
+For example, \texttt{python code/classify.py 83 413} returns the explicit
+prefix and block with $(p,q)=(496,30462)$, and input $83,417$ gives
+$(500,31374)$. The pair $(50,251)$ has the integer-seam
+description with $(p,q)=(301,20797)$. The program
+\path{verify_coverage.py} checks the finite interval partition, all
+rational endpoints, and every outer period value against the proved set.
+The infinite-domain partition is the algebraic proof in
+Section~\ref{sec:coverage}, not a bounded enumeration.
+
+The files \path{COVERAGE.md}, \path{coverage.csv}, and
+\path{atlas_coverage.csv} provide the case inventory. The source
+\path{subtraction_games_complete.tex} is standalone and compiles with
+two ordinary pdfLaTeX passes. The accompanying reproducibility instructions
+give the full file list, expected outputs and commands.
+
+\paragraph{Provenance and verification status.}
+The mathematical arguments, verification code and manuscript were generated
+using ChatGPT and Codex. The human project organizer initiated the tasks,
+requested continuation and revisions, and prepared the work for public
+distribution; no human contribution to the mathematical proofs is claimed.
+This manuscript consolidates earlier project drafts and certificates;
+the supplement records which components were reused. The work is an
+independently released AI-generated preprint, not an OpenAI publication
+or endorsement. No independent human peer review or Lean formalization
+is claimed.
+
+
+\section{Worked boundary reductions and proof correspondence}\label{app:proof-map}
+This appendix makes explicit the hypotheses behind the executable checks.
+Counts in Appendix~\ref{app:uniform} describe finite obligations, not a
+replacement for the reductions. In particular, Lemma~\ref{lem:macro40}
+requires the endpoints of every operand, not merely those of the target.
+
+\subsection{One upper boundary identity, with every endpoint}
+Take $(s,\delta)=(0,0)$ in \eqref{eq:upper-boundary-certificate};
+$k=3m$ and $m\ge13$ in the auxiliary identity. Write
+$J=01012323010123$, $K=201012010120101201$, $M=20101$.
+The exact finite operands used by the checker are
+\[
+S=K_0\rho^{m+2}\rho^{m-3}\beta^{2m+5},\qquad
+F=\omega^{2m-2}J M^{2m-2}K\rho^{2m+10}.
+\]
+Here $F$ is an adequate prefix of $F^+_{3m-1}$, and $K_0=010120101201$.
+The assertion is $S(y)=\mex(S(y-1),S(y-4),F(y-6))$ on
+$0\le y<H=26m+28$, omitting an operand when its index is negative.
+The lengths are $|S|=26m+29$ and $|F|=42m+86$.
+
+Split $K_0,J,K$ into single letters. In the notation
+$x+\{i,\ldots,j\}=\{x+i,\ldots,x+j\}$, the complete unshifted sets are
+\begin{align*}
+E_S={}&\{0,1,\ldots,12,\;8m+28,\;16m+4,\;26m+29\},\\
+E_F={}&\{0,42m+86\}\cup(16m+\{-16,\ldots,-2\})
+                     \cup(26m+\{-12,\ldots,6\}).
+\end{align*}
+Consequently the complete arrangement is
+\[
+\{0,H\}\ \cup\ \bigcup_{t\in\{0,1,4\}}(E_S+t)\ \cup\ (E_F+6).
+\]
+It includes the availability thresholds $1,4,6$. The positive slope
+differences are at least $8$, all slopes are even, and all intercepts
+lie in $[-10,92]$. Thus
+$K_*=\max(13,\lceil(92+10+40)/8\rceil)=18$;
+indeed $8\cdot18-102=42\ge40$. Equal-slope endpoints have fixed
+separation; different-slope endpoints keep their order and have separation
+at least $40$ for every $m\ge18$. Literals have period one, and the
+variable segments have period five or eight. Increasing $m$ by $20$
+translates every segment start by a multiple of $40$, preserving the
+phase of each operand as well as availability.
+
+For $m\ge18$, the only endpoints strictly above $H$ are
+$26m+29$, $26m+30$, $26m+33$, $42m+92$; none is below zero.
+Their excesses above $H$ are $1,2,5,16m+64$, respectively, so none can
+reenter the verification interval. The implementation keeps all endpoints
+when computing the conservative bounds; clipping is only a way of reading
+the finite-reduction proof. Moreover
+$|F|-(H-6)=16m+64>0$ for every $m\ge13$, so no missing input is hidden
+by that clipping. Smaller parameters are checked with their actual words.
+The functions \texttt{templates}, \texttt{macro\_ends}, \texttt{bounds}
+and \texttt{check} in \path{upper_boundary_uniform.py} implement these
+four steps. Checking $m=13,\ldots,37$ proves all $m\ge13$ by
+Lemma~\ref{lem:macro40}. For instance at $m=13,y=D_0=132$,
+the target is $0$ and the three operands are $2,1,2$, whose mex is $0$.
+At $y=H$ the cyclic identity already applies, as shown in the main proof.
+
+\subsection{One lower boundary identity, with every endpoint}
+For $(s,\delta)=(0,0)$ in \eqref{eq:lower-wrap-obligation}, use
+\[
+S=01\rho^{m+2}\rho^{m-2}\beta^{2m+3},\qquad
+F=\omega^{2m-1}(0101232)\beta^{2m-1}01\rho^{2m+10}.
+\]
+Here $F$ is a prefix of $F^-_{3m-1}$. The identity is
+$S(y)=\mex(S(y-1),S(y-4),F(y-4))$, with the same omission convention,
+on $0\le y<H=26m+16$. Its lengths are $26m+17$ and $42m+76$.
+Splitting the two fixed literals gives exactly
+\begin{align*}
+E_S={}&\{0,1,2,\;8m+18,\;16m+2,\;26m+17\},\\
+E_F={}&\{0,42m+76\}\cup(16m+\{-8,\ldots,-1\})
+                    \cup(26m+\{-6,-5,-4\}).
+\end{align*}
+Use $\{0,H\}\cup\bigcup_{t\in\{0,1,4\}}(E_S+t)\cup(E_F+4)$.
+Availability at $1,4$ is included. The intercept range is $[-4,80]$,
+the minimum slope gap is $8$, and all slopes are even. Therefore
+$K_*=\max(13,\lceil(80+4+40)/8\rceil)=16$ and
+$8\cdot16-84=44\ge40$. The same period-$40$, parameter-step-$20$
+argument proves fixed order and phase preservation.
+
+For every $m\ge16$, the only endpoints above $H$ are
+$26m+17$, $26m+18$, $26m+21$, $42m+80$, at distances
+$1,2,5,16m+64$. None lies below zero. The input-coverage inequality is
+$|F|-(H-4)=16m+64>0$ for all $m\ge13$. Thus discarded endpoints
+cannot return, and every needed predecessor exists in the finite operand.
+The same four function names in \path{lower_open_boundary_uniform.py}
+check this construction for $m=13,\ldots,35$. At $m=13,y=D_0=122$
+the target and operands are again $0$ and $2,1,2$.
+The main proof supplies the cyclic identity from $y=H$ onwards.
+
+\subsection{Correspondence for all essential finite obligations}
+The following entries specify the actual functions, reductions and scope.
+They are also indexed in \path{PROOF_MAP.md}. Recurrence checks alone
+never establish minimality or exhaustiveness.
+
+\paragraph{Outer affine words.}
+\path{verify_atlas.py}, function \texttt{check}, takes each of the
+89 open records. It verifies the length identities and uses
+$F=HW^r$, $r=2$ or $3$, checking $|F|\ge q+c+p$ at both cone endpoints.
+Every run endpoint shifted by $0,a,4a,c$ is included (after normalization
+by $a$). Exact affine inequalities at both rational ends prove stable order
+throughout the open cone; right-continuity handles coordinate endpoints.
+Lemmas~\ref{lem:atlas} and~\ref{lem:certificate} prove recurrence.
+The same function exhausts circular-run rotations and all possible isolated
+roots of unequal affine lengths, and checks $H(|H|-1)\ne W(|W|-1)$.
+Lemma~\ref{lem:atlas-min} then proves least $p,q$. There is no unbounded
+integer reduction or phase modulus in this homogeneous-run calculation.
+
+\paragraph{Rational seams and coverage.}
+The module \path{seam_inventory.py} validates records with
+\path{validate_record}, inventories with \path{validate_inventory}, and
+loads tables through \path{load_tables}. These functions enforce the
+reduced-fraction association and two uniqueness conditions in
+Section~\ref{sec:record-example}. The expected identifiers are exactly
+the endpoints strictly between zero and one in the two contiguous atlas
+partitions, whose outer limits are checked independently.
+\path{verify_seams.py}, function \texttt{verify}, checks all positions
+$0\le n<q+c+p$, every proper divisor of $p$, and the preceding-symbol
+mismatch. Lemma~\ref{lem:certificate} is the finite reduction; no varying
+phase or numerical threshold is needed. \path{verify_coverage.py},
+function \texttt{main}, checks the finite partition and period inventory.
+The algebra in Section~\ref{sec:coverage} proves coverage of the infinite
+remaining region. \path{test_seam_inventory.py}, function \texttt{main},
+rejects seven corrupt inventories, including incorrect labels, duplicates
+and missing seams. These tests validate the safeguard, not a new theorem.
+
+\paragraph{Large range and $a=2$.}
+In \path{uniform_certificate.py}, \texttt{template}, \texttt{bound}
+and \texttt{check} implement Lemma~\ref{lem:affine} for the nine domains
+in Table~\ref{tab:uniform}. Shift by normalized $0,1,4,c$; use the
+stated horizon $HWW$ or $HW^{k+2}$. The intercept bounds in that table
+give $K=4,4,5,5,6,8,9,7,5$ through
+$K=\max(k_0,\lceil(U-L+5)/5\rceil)$. Integer phase shifts are multiples
+of five. All rational intersections and included endpoints are checked.
+The $j=1$ case is the printed cyclic-block argument.
+For $j=4$, \path{band4_tables.py}, function \texttt{table}, checks the
+three transient/early/late coordinate partitions (\texttt{less} proves
+their order throughout $0<r<a$); the printed periodic extension supplies
+the horizon. This is the affine-cell argument with no variable phase.
+In \path{a2_certificate.py}, \texttt{boundaries} and \texttt{certify}
+include shifts $0,2,8,10k+t$ and the exact horizon $q+c+p$.
+Slopes are multiples of ten, intercepts lie in $[-10,50]$, and
+$10\cdot7-60=10$, so $k\le7$ suffices with period ten.
+Primitivity and last-mismatch arguments for these outer families are
+printed in their respective theorem proofs, separately from these checks.
+
+\paragraph{Upper half-strip and integer seams.}
+The function \path{front_checks} in
+\path{upper_splice_certificate.py} uses shifts $0,1,4,5$ and horizon $26m+100$ for each residue of the
+column index; all operands enter the final period-eight segment by
+$26m+92$. The exceptional column $0$ uses delay six and checks $y<100$,
+covering all eight phases after $y=18$. The function explicitly verifies
+adjacent order and distance at $m=20$, and verifies that every clipped
+endpoint remains outside using its slope relative to $0$ or the horizon.
+Together with even slopes, this gives Lemma~\ref{lem:macro40} with
+$L=40,M=20,K=20$, checking smaller parameters and residues $20$ through $39$.
+For the integer-seam wrap, \texttt{templates}, \texttt{ordered\_endpoints}
+and \texttt{wrap\_checks} use shifts $0,1,4,6$, horizon
+$26m+(20,18,24)_s$, the same $K=20$, and the same explicit clipping test;
+the target has nine spare letters and the predecessor's artificial end
+lies beyond the horizon. The smallest checked $m$ is $4,3,3$ in residues
+$0,1,2$, respectively. The nonwrap join is \texttt{interface\_checks}:
+it tests offsets $-1,\ldots,3$ and $u=0,1,2,3$ subject to column validity;
+at $u\ge3$ all front offsets are final and $u\mapsto u+1$ adds eight.
+The function \texttt{exact\_q\_checks} verifies the $62$ fixed suffix
+symbols used by the printed earliest-preperiod argument.
+
+\paragraph{Open central boundaries and their minimality.}
+The functions \texttt{templates}, \texttt{macro\_ends}, \texttt{bounds}
+and \texttt{check} in the two boundary programs implement exactly the
+six identities on each side and their displayed threshold tables.
+The two worked cases above demonstrate all hypotheses; the other ten
+use the same complete endpoint construction, their own intercept bounds,
+and the asserted affine input-length inequality. Thresholds are
+$\max(13,\lceil(v-u+40)/8\rceil)$, with $L=40,M=20$.
+The programs \path{upper_minimality.py}, function \texttt{check}, and
+\path{lower_open_minimality.py}, function \texttt{main}, verify respectively
+$76$ and $44$ fixed suffix symbols. These have no growing horizon:
+the proofs cancel common powers, leaving fixed tails and lengths
+$8m+$constant; $m\ge13$ guarantees all required suffixes exist.
+For example, the upper residue-one comparison uses offsets
+$1\le\ell\le27-6h$, $h=0,1,2$, hence $27+21+15=63$ symbols.
+The printed cluster-count and unique-parsing argument establishes
+primitivity independently of those suffix checks.
+
+\paragraph{Lower half-strip and integer seams.}
+\path{halfstrip_certificate.py}, functions \texttt{templates},
+\texttt{boundaries}, \texttt{check}, \texttt{main}, uses shifts
+$0,1,4,5$, horizon $Q_j+8$. The intercept bounds are
+$[-3,10]$, $[0,24]$, $[0,30]$, with slope gap ten.
+Thus $K=6,7,7$ from $10K-(v-u)\ge40$; check $0\le m<K+20$.
+For ordinary columns the analytic token identity applies after $Q_j+4$.
+The exceptional column zero uses the bulk word at delay four and checks
+$0\le y<14$, including all eight final phases $6,\ldots,13$.
+For integer seams, \path{lower_seam_uniform_certificate.py}, functions
+\texttt{wbound} and \texttt{symbolic\_bounds}, include the endpoints of
+every cyclic copy indexed $-2,\ldots,5$, front endpoints, shifts
+$0,1,4,-5$ and $0,4$, horizon $D+P+10$, and the proposed last-mismatch
+successor. Two affine inequalities checked at $h=3$, with nonnegative
+slopes, prove these copies cover every required cyclic argument forever.
+The intercept ranges are $[-8,25],[-10,39],[-28,75]$, slope gap two,
+giving $K=37,45,72$. Function \texttt{check\_boundary} checks
+$3\le h<K+20$, recurrence, splice and final boundary mismatch.
+Function \texttt{check\_column\_difference} checks the interior last
+mismatches through $\max(Q_j,Q_{j+1})+8$; the endpoints include their
+successors, the intercept ranges are $[-6,24],[-6,30],[-6,36]$,
+gap ten, and $K=7,8,9$. The final period-eight tails agree thereafter.
+All use Lemma~\ref{lem:macro40} with $L=40,M=20$.
+
+\paragraph{Local token check and independent comparisons.}
+\path{tail_stationarity_check.py} exhausts the $16$ four-token contexts
+and $64$ positions of the third token; two preceding tokens cover delay
+four and a following token covers advance one. This finite locality is
+the reduction, and the analytic Lemma~\ref{lem:tokens} already proves the
+identity. It is a redundant exact check. The programs with
+\texttt{crosscheck} in their names compare explicit words with the
+initialized recurrence on stated finite inputs; they are corroboration,
+not the unbounded proofs. The optional pure-extension certificate is
+also redundant for the final dependency chain.
+
+
+\begin{thebibliography}{9}
+\bibitem{Manabe} Hikaru Manabe, \emph{Purely Periodic Three-move Subtraction Games}, arXiv:2609.05358v2, 16 September 2026. \url{https://arxiv.org/abs/2609.05358v2}.
+\bibitem{Zhang} Shenxing Zhang, \emph{On the linearity of the periods of subtraction games}, Theoretical Computer Science \textbf{985} (2024), 114350. Author's revised manuscript, 30 July 2025, consulted at \href{https://zhangshenxing.github.io/publications/Zhang2024tcs%20On%20the%20linearity%20of%20the%20periods%20of%20subtraction%20games.pdf}{the author's publication page}.
+\bibitem{Ho} Nhan Bao Ho, \emph{On the expansion of three-element subtraction sets}, Theoretical Computer Science \textbf{582} (2015), 35--47. \href{https://doi.org/10.1016/j.tcs.2015.03.025}{doi:10.1016/j.tcs.2015.03.025}. Inspected preprint: \url{https://arxiv.org/abs/1202.2986v3}.
+\bibitem{MP} Istv\'an Mikl\'os and Logan Post, \emph{Superpolynomial period lengths of the winning positions in the subtraction game}, International Journal of Game Theory \textbf{53} (2024), 1275--1313. \href{https://doi.org/10.1007/s00182-024-00911-5}{doi:10.1007/s00182-024-00911-5}. Inspected extended preprint: \url{https://arxiv.org/abs/2312.02426v1}.
+\bibitem{Ward} Mark Daniel Ward, \emph{A Conjecture about Periods in Subtraction Games}, arXiv:1606.04029v1 (2016). \url{https://arxiv.org/abs/1606.04029v1}.
+
+\bibitem{Supplement} \emph{Electronic supplement to this paper}, version 1.1.1, 15 October 2026. Complete word tables, exact checkers and reproducibility materials: \href{https://github.com/TommyMaHaoKun/subtraction-games-a4ac/releases/tag/v1.1.1}{versioned public release}. No DOI assigned.
+
+\end{thebibliography}
+\end{document}
